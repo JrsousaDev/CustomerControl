@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { IRedirectLinksProps } from './IAside';
+
 export const DefaultAsideContainer = styled.aside`
   background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)), url("https://demos.creative-tim.com/nextjs-material-dashboard/_next/static/images/sidebar-2-310509c95512893dc661bd3a6b0d2a5d.jpg");
   background-position: center;
@@ -39,5 +41,9 @@ export const AsideBody = styled.div`
   justify-content: center;
 `
 
-export const RedirectLinks = styled.a`
+export const RedirectLinks = styled.a<IRedirectLinksProps>`
+  max-width: 200px;
+  width: 100%;
+  padding-bottom: 1rem;
+  text-align: left;
 `

@@ -1,26 +1,33 @@
 import Link from "next/link";
+import RedirectLinksAside from "../../ActiveLinks/RedirectLinksAside";
+
+import { useRouter } from "next/router";
 import { IAsideProps } from "./IAside";
 import { 
   AsideBody, 
   AsideHeader, 
   ContainerAll, 
-  DefaultAsideContainer, 
-  RedirectLinks
+  DefaultAsideContainer,
 } from "./styles";
 
-export default function DefaultAside({className}: IAsideProps){
+export default function DefaultAside({ className }: IAsideProps){
   return(
   <DefaultAsideContainer className={className}>
     <ContainerAll>
 
       <AsideHeader>
-        Customer Control v1.0
+        <Link href="/dashboard" passHref>
+          Customer Control v1.0
+        </Link>
       </AsideHeader>
 
       <AsideBody>
-        <Link href="/clientes" passHref>
-          <RedirectLinks>Clientes</RedirectLinks>
-        </Link>
+        <RedirectLinksAside href="/dashboard">
+          Dashboard
+        </RedirectLinksAside>
+        <RedirectLinksAside href="/clientes">
+          Clientes
+        </RedirectLinksAside>
       </AsideBody>
 
     </ContainerAll>

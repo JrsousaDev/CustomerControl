@@ -1,5 +1,22 @@
-import { GET_USER } from "../constants/routes";
+import { AUTH_USER, GET_USER } from "../constants/routes";
 import { api } from "./api";
+
+interface ICreateAuthenticateUser {
+  email: string;
+  password: string;
+}
+
+export async function createAuthenticationUser({ email, password }: ICreateAuthenticateUser) {
+  const data = { email, password };
+  try {
+    const response = await api.post(AUTH_USER, data);
+    return response.data
+  } catch (error) {
+    if (error.response){
+      return error.response.data
+    }
+  }
+}
 
 
 interface IGetUserInID {

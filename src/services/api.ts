@@ -1,6 +1,3 @@
-import axios from "axios";
-import { BASE_URL_BACKEND } from "../constants/values";
+import { getAPIClient } from "./axios";
 
-export const api = axios.create({
-  baseURL: BASE_URL_BACKEND,
-});
+export const api = getAPIClient();

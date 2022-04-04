@@ -16,7 +16,8 @@ export const ContainerGridLayout = styled.div`
 
   .section{
     grid-area: s;
-    height: 100vh;
+    min-height: 100vh;
+    height: 100%;
   }
 
   .aside{

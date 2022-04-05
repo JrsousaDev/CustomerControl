@@ -30,7 +30,7 @@ export default function Dashboard({ resCustomers, money }: IDashboardProps) {
           <CustomersIcon/>
         </DefaultDashboard>
 
-        <DefaultDashboard title="Faturamento mês anterior" values="R$ 8,424.00" bgColor="#0C9600">
+        <DefaultDashboard title="Faturamento mês anterior" values={money} bgColor="#0C9600">
           <GiveMoneyIcon />
         </DefaultDashboard>
       </ContainerSplitDashboard>
@@ -43,22 +43,32 @@ export default function Dashboard({ resCustomers, money }: IDashboardProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const userId = "6247ce4855bdb3cba6be0ee3";
+  const userId = "624a61003f400d5a198bb6bc";
   const user = await getUserInID({userId});
 
-  const customers = user.listCustomers.map((list) => {
+  if(!user?.message || !user) {
+ 
+    const customers = user.listCustomers.map((list) => {
+      return{
+        money: list.customerId.contract.value
+      }
+    });
+  
+    const totalMoney = customers.reduce((total, customer) => total + customer.money, 0)
+    .toLocaleString('pt-br', {style: 'currency', currency: 'BRL'});
+  
     return{
-      money: list.customerId.contract.value
+      props:{
+        resCustomers: customers,
+        money: totalMoney
+      }
     }
-  });
 
-  const totalMoney = customers.reduce((total, customer) => total + customer.money, 0)
-  .toLocaleString('pt-br', {style: 'currency', currency: 'BRL'});
+  } else {
 
-  return{
-    props:{
-      resCustomers: customers,
-      money: totalMoney
+    return{
+      props:{}
     }
+
   }
 }

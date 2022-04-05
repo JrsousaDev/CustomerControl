@@ -58,8 +58,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const userId = "624a61003f400d5a198bb6bc";
   const user = await getUserInID({userId});
 
-  if (!user.message || !user) {
-    const customers = await user.listCustomers.map((list) => {
+  if (!user.message || user) {
+    const customers = await user.listCustomers?.map((list) => {
       return{
         name: list.customerId?.name || null,
         dueDate: moment(list.customerId?.contract.dueDate).format('DD/MM/YYYY') || null,

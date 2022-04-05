@@ -18,7 +18,6 @@ export async function createAuthenticationUser({ email, password }: ICreateAuthe
   }
 }
 
-
 interface IGetUserInID {
   userId: string;
 }
@@ -26,7 +25,7 @@ interface IGetUserInID {
 export async function getUserInID({ userId }: IGetUserInID) {
   const data = { userId };
   try {
-    const response = await api.post(GET_USER, data)
+    const response = await api.post(GET_USER, data);
     return response.data
   } catch (error) {
     if (error.response) {

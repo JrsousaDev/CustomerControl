@@ -1,7 +1,7 @@
 import { forwardRef, ForwardRefRenderFunction } from "react";
 import { IInputSearchProps } from "./IInputSearch";
 import { Container, ContainerInputRelative, InlineInput, Input } from "./styles";
-import { AiOutlineSearch } from "react-icons/Ai";
+import { AiOutlineSearch } from "react-icons/ai";
 
 const InputSearchBase: ForwardRefRenderFunction<HTMLInputElement, IInputSearchProps> = (
   {

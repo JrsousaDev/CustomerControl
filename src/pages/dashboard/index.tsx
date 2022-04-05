@@ -46,21 +46,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const userId = "624a61003f400d5a198bb6bc";
   const user = await getUserInID({userId});
 
-  if(!user?.message || !user) {
+  if(!user?.message && user) {
  
-    const customers = user.listCustomers.map((list) => {
+    const customers = user.listCustomers?.map((list) => {
       return{
         money: list.customerId.contract.value
       }
     });
   
-    const totalMoney = customers.reduce((total, customer) => total + customer.money, 0)
+    const totalMoney = customers?.reduce((total, customer) => total + customer.money, 0)
     .toLocaleString('pt-br', {style: 'currency', currency: 'BRL'});
   
     return{
       props:{
-        resCustomers: customers,
-        money: totalMoney
+        resCustomers: customers || null,
+        money: totalMoney || null
       }
     }
 

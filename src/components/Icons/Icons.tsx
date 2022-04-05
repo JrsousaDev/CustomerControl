@@ -1,6 +1,6 @@
-import { RiUserFill } from "react-icons/Ri";
-import { IoIosNotifications } from "react-icons/Io";
-import { AiOutlineSearch } from "react-icons/Ai";
+import { RiUserFill } from "react-icons/ri";
+import { IoIosNotifications } from "react-icons/io";
+import { AiOutlineSearch } from "react-icons/ai";
 
 interface IconsProps {
   styleIcon?: any;

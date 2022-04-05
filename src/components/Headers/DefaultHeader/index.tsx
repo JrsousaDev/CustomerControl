@@ -1,4 +1,4 @@
-import { IconNotify, IconUser } from "../../Icons/Icons";
+import { IconNotify } from "../../Icons/Icons";
 import { InputSearch } from "../../Inputs/InputSearch";
 import { IDefaultHeaderProps } from "./IDefaultHeader";
 import { 
@@ -24,7 +24,7 @@ export default function DefaultHeader({ title, className }: IDefaultHeaderProps)
           icon={true}
         />
         <IconNotify styleIcon={{height: '25px', width: '25px', cursor: 'pointer'}}/>
-        <IconUser styleIcon={{height: '25px', width: '20px', cursor: 'pointer'}}/>
+        {/* <IconUser styleIcon={{height: '25px', width: '20px', cursor: 'pointer'}}/> */}
       </C_Icons>
 
     </Container>

@@ -5,10 +5,6 @@ import { RedirectLinks } from './styles'
 
 function ActiveLink({ children, href }) {
   const router = useRouter()
-  const style = {
-    marginRight: 10,
-    color: router.asPath === href ? 'red' : 'black',
-  }
 
   return (
     <Link href={href} passHref>

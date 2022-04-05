@@ -1,7 +1,6 @@
 import Link from "next/link";
 import RedirectLinksAside from "../../ActiveLinks/RedirectLinksAside";
 
-import { useRouter } from "next/router";
 import { IAsideProps } from "./IAside";
 import { 
   AsideBody, 

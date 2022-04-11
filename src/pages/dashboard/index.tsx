@@ -5,6 +5,7 @@ import DefaultAside from "../../components/Asides/DefaultAside";
 import GridLayout from "../../containers/GridLayout";
 import GiveMoneyIcon from "/public/assets/giveMoney.svg";
 import CustomersIcon from "/public/assets/customers.svg";
+import getTokenId from "../../utils/getTokenID";
 
 import { ContainerSplitDashboard } from "../../styles/pageStyles/dashboard/styles";
 import { GetServerSideProps } from "next";
@@ -12,6 +13,7 @@ import { getUserInID } from "../../services/user";
 import { IDashboardProps } from "../../interfaces/dashboard/IDashboard";
 import { useState } from "react";
 import { GlobalSection } from "../../styles/Global";
+import { withSSRAuth } from "../../utils/withSSRAuth";
 
 export default function Dashboard({ resCustomers, money }: IDashboardProps) {
   const [ customers, setCustomers ] = useState(resCustomers);
@@ -42,33 +44,34 @@ export default function Dashboard({ resCustomers, money }: IDashboardProps) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const userId = "624a61003f400d5a198bb6bc";
-  const user = await getUserInID({userId});
+export const getServerSideProps: GetServerSideProps = withSSRAuth(
+  async (context) => {
+    const userId = await getTokenId(context, 'customerControl.token');
+    const user = await getUserInID({userId});
 
-  if(!user?.message && user) {
- 
-    const customers = user.listCustomers?.map((list) => {
+    if(!user) {
       return{
-        money: list.customerId.contract.value
-      }
-    });
-  
-    const totalMoney = customers?.reduce((total, customer) => total + customer.money, 0)
-    .toLocaleString('pt-br', {style: 'currency', currency: 'BRL'});
-  
-    return{
-      props:{
-        resCustomers: customers || null,
-        money: totalMoney || null
+        props:{}
       }
     }
-
-  } else {
-
-    return{
-      props:{}
+  
+    if(!user?.message && user) {
+      const customers = user.listCustomers?.map((list) => {
+        return{
+          money: list.customerId.contract.value
+        }
+      });
+    
+      const totalMoney = customers?.reduce((total, customer) => total + customer.money, 0)
+      .toLocaleString('pt-br', {style: 'currency', currency: 'BRL'});
+    
+      return{
+        props:{
+          resCustomers: customers || null,
+          money: totalMoney || null
+        }
+      }
     }
-
   }
-}
+)
+

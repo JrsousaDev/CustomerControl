@@ -1,7 +1,7 @@
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 import { parseCookies } from "nookies";
 
-export function withSSRAuthConarh<P>(fn: GetServerSideProps<P>) {
+export function withSSRAuth<P>(fn: GetServerSideProps<P>) {
   return async (context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<P>> => {
     const cookies = parseCookies(context);
     const token = cookies['customerControl.token'];

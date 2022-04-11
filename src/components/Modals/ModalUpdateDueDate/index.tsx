@@ -10,7 +10,6 @@ import {
   TitleNameClient
 } from "./styles";
 
-import 'react-toastify/dist/ReactToastify.css';
 import moment from "moment";
 
 interface IModalUpdateDueDateProps {

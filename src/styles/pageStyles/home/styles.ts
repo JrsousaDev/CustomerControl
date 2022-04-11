@@ -25,10 +25,13 @@ export const BoxContainer = styled.div`
   justify-content: center;
   align-items: center;
 
-  gap: 40px;
+  gap: 70px;
 `
 
-export const BoxTitle = styled.h1`
+export const BoxTitle = styled.h2`
+  text-align: center;
+  max-width: 350px;
+  width: 100%;
 `
 
 export const ContainerInputs = styled.div`
@@ -51,7 +54,7 @@ export const BoxButtonLogin = styled.button`
   text-transform: uppercase;
   color: white;
 
-  background-color: #38A9FF;
+  background-color: #000;
 
   transition: all 0.4s;
 

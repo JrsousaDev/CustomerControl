@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "../contexts/AuthContext";
+import { GetServerSideProps } from "next";
+import { withSSRAuthLogged } from "../utils/withSSRAuthLogged";
 import { toast } from "react-toastify";
-
 import { InputPrimary } from "../components/Inputs/InputPrimary";
 import { 
   BoxButtonLogin,
@@ -12,12 +12,15 @@ import {
   ContainerInputs 
 } from "../styles/pageStyles/home/styles";
 
-import * as yup from "yup";
+import Router from "next/router";
 
-const signInFormSchema = yup.object().shape({
+
+/* import * as yup from "yup"; */
+
+/* const signInFormSchema = yup.object().shape({
   email: yup.string().required("Digite seu e-mail cadastrado"),
   password: yup.string().required("Digite sua senha"),
-});
+}); */
 
 export default function Home() {
   const { signIn } = useAuth();
@@ -25,21 +28,21 @@ export default function Home() {
   const { 
     register, 
     handleSubmit, 
-    setValue, 
-    clearErrors, 
-    formState, 
-    getValues 
   } = useForm();
-  const { errors, isSubmitting } = formState;
 
   const handleSignIn = async (data) => {
-    console.log(data);
+    try {
+      await signIn(data);
+      Router.push('/dashboard');
+    } catch (err) {
+      toast.error(err)
+    }
   }
 
   return(
     <Container>
       <BoxContainer>
-        <BoxTitle>Welcome</BoxTitle>
+        <BoxTitle>Controle de Clientes v1.0</BoxTitle>
 
         <ContainerInputs>
           <InputPrimary 
@@ -51,6 +54,7 @@ export default function Home() {
           <InputPrimary
             id="password"
             name="password"
+            type="password"
             placeholder="Senha"
             {...register("password")}
           /> 
@@ -64,3 +68,12 @@ export default function Home() {
     </Container>
   )
 }
+
+export const getServerSideProps: GetServerSideProps = withSSRAuthLogged(
+  async (context) => {
+    
+    return{
+      props:{}
+    }
+  }
+)

@@ -1,3 +1,4 @@
+import { useAuth } from "../../../contexts/AuthContext";
 import { IconNotify, IconUser } from "../../Icons/Icons";
 import { InputSearch } from "../../Inputs/InputSearch";
 import { IDefaultHeaderProps } from "./IDefaultHeader";
@@ -9,6 +10,8 @@ import {
 } from "./styles";
 
 export default function DefaultHeader({ title, className }: IDefaultHeaderProps) {
+  const { signOut } = useAuth();
+
   return(
   <Header className={className}>
     <Container>
@@ -24,7 +27,10 @@ export default function DefaultHeader({ title, className }: IDefaultHeaderProps)
           icon={true}
         />
         <IconNotify styleIcon={{height: '25px', width: '25px', cursor: 'pointer'}}/>
-        <IconUser styleIcon={{height: '25px', width: '20px', cursor: 'pointer'}}/>
+        <IconUser 
+          styleIcon={{height: '25px', width: '20px', cursor: 'pointer'}}
+          onClick={signOut}
+        />
       </C_Icons>
 
     </Container>

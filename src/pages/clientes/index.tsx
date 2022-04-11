@@ -2,6 +2,8 @@ import { GetServerSideProps } from "next";
 import { GlobalSection } from "../../styles/Global";
 import { useState } from "react";
 import { getUserInID } from "../../services/user";
+import { BsCalendar2CheckFill } from "react-icons/bs";
+import { useQuery } from "react-query";
 
 import { 
   ContainerTable, 
@@ -15,34 +17,76 @@ import DefaultHeader from "../../components/Headers/DefaultHeader";
 import MaterialTablesData from "../../components/Tables/MaterialTablesData";
 import GridLayout from "../../containers/GridLayout";
 import moment from 'moment';
+import ModalUpdateDueDate from "../../components/Modals/ModalUpdateDueDate";
 
-export default function Customers({customers}) {
-  const [ customer, setCustomer ] = useState(customers);
-  const currentDate = moment(new Date()).format('DD/MM/YYYY');
+export default function Customers({ resCustomers, userId }) {
+
+  async function loadCustomers() {
+    const user = await getUserInID({userId});
+
+    const customers = await user.listCustomers?.map((list) => {
+      return{
+        _id: list.customerId?._id || null,
+        name: list.customerId?.name || null,
+        dueDate: list.customerId?.contract.dueDate,
+        dueDateFormat: moment(list.customerId?.contract.dueDate).format('DD/MM/YYYY') || null,
+        value: list.customerId?.contract.value.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}) || null,
+      }
+    });
+
+    return customers
+  }
+
+  const { data: customers, refetch } = useQuery("checkins", loadCustomers, {initialData: resCustomers});
+  const [ openModalUpdateDueDate, setOpenModalUpdateDueDate ] = useState(false);
+  const [ selectedCustomer, setSelectedCustomer ] = useState();
+
+  const currentDate = moment();
+
+  const updateDueDate = async ({customer}) => {
+    setOpenModalUpdateDueDate(true);
+    setSelectedCustomer(customer);
+  }
 
   return(
+  <>
+
+  <ModalUpdateDueDate
+    refetchCustomer={refetch}
+    userId="624a61003f400d5a198bb6bc"
+    customer={selectedCustomer} 
+    openModal={openModalUpdateDueDate} 
+    setOpenModal={setOpenModalUpdateDueDate}
+  />
+
   <GridLayout>
     <DefaultHeader title="Lista de clientes" className="header"/>
-
     <GlobalSection className="section">
-
       <ContainerTable>
         <MaterialTablesData 
           title="Clientes"
           columns={[        
             { title: 'Empresa', field: 'name' },
             { title: 'Contrato', field: 'value'},
-            { title: 'Data de vencimento', field: 'dueDate' },
+            { title: 'Data de vencimento', field: 'dueDateFormat' },
             {
               title: 'Status', 
               field: '',
-              render: rowData => 
-              currentDate >= rowData.dueDate 
-              ? <StatusAttentionTable>Atrasado</StatusAttentionTable>
-              : <StatusCheckedTable>OK</StatusCheckedTable>
+              render: rowData => {
+                return currentDate.isAfter(moment(rowData.dueDate), 'day')
+                ? <StatusAttentionTable>Atrasado</StatusAttentionTable>
+                : <StatusCheckedTable>Em dias</StatusCheckedTable>
+              }
             },
           ]}
-          data={customer}
+          actions={[
+            {
+              icon: () => <BsCalendar2CheckFill />,
+              tooltip: 'Atualizar vencimento',
+              onClick: (event, rowData) => updateDueDate({customer: rowData})
+            }
+          ]}
+          data={customers}
         />
       </ContainerTable>
 
@@ -51,6 +95,7 @@ export default function Customers({customers}) {
     <DefaultAside className="aside"/>
     <DefaultFooter className="footer"/>
   </GridLayout>
+  </>
   )
 }
 
@@ -61,15 +106,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!user.message || user) {
     const customers = await user.listCustomers?.map((list) => {
       return{
+        _id: list.customerId?._id || null,
         name: list.customerId?.name || null,
-        dueDate: moment(list.customerId?.contract.dueDate).format('DD/MM/YYYY') || null,
+        dueDate: list.customerId?.contract.dueDate,
+        dueDateFormat: moment(list.customerId?.contract.dueDate).format('DD/MM/YYYY') || null,
         value: list.customerId?.contract.value.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}) || null,
       }
     });
 
     return{
       props:{
-        customers
+        resCustomers: customers,
+        userId,
       }
     }
 

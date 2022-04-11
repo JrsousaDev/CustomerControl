@@ -1,12 +1,13 @@
 import MaterialTable from '@material-table/core';
 import { IMaterialTableProps } from './IMaterialTablesData';
 
-export default function MaterialTablesData({columns, data, title}: IMaterialTableProps) {
+export default function MaterialTablesData({columns, data, title, actions}: IMaterialTableProps) {
   return(
     <div style={{ maxWidth: '100%' }}>
     <MaterialTable
       columns={columns}
       data={data}
+      actions={actions}
       title={title}
       localization={{
         pagination: {

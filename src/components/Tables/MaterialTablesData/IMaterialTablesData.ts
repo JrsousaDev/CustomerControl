@@ -10,4 +10,5 @@ export interface IMaterialTableProps{
   columns: IColumns[];
   data: [{}];
   title: string;
+  actions: any;
 }

@@ -72,6 +72,10 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
         }
       }
     }
+
+    return{
+      props:{}
+    }
   }
 )
 

@@ -105,6 +105,12 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
   async (context) => {
     const userId = await getTokenId(context, 'customerControl.token');
     const user = await getUserInID({userId});
+
+    if(!user){
+      return{
+        props:{}
+      }
+    }
   
     if (!user?.message && user) {
       const customers = await user.listCustomers?.map((list) => {
@@ -123,6 +129,10 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
           userId: userId || null,
         }
       }
+    }
+
+    return{
+      props:{}
     }
   }
 )

@@ -4,7 +4,9 @@ import { AiOutlineSearch } from "react-icons/ai";
 
 interface IconsProps {
   styleIcon?: any;
-} 
-export const IconUser = ({styleIcon}: IconsProps) => <RiUserFill style={styleIcon}/>
-export const IconNotify = ({styleIcon}: IconsProps) => <IoIosNotifications style={styleIcon} />
-export const IconSearch = ({styleIcon}: IconsProps) => <AiOutlineSearch style={styleIcon} />
+  onClick?: () => void;
+}
+
+export const IconUser = ({styleIcon, onClick}: IconsProps) => <RiUserFill style={styleIcon} onClick={onClick}/>
+export const IconNotify = ({styleIcon, onClick}: IconsProps) => <IoIosNotifications style={styleIcon} onClick={onClick}/>
+export const IconSearch = ({styleIcon, onClick}: IconsProps) => <AiOutlineSearch style={styleIcon} onClick={onClick}/>

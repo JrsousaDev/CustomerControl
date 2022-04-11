@@ -33,7 +33,7 @@ type AuthProviderProps = {
   children: ReactNode;
 };
 
-const AuthContext = createContext({} as AuthContextData);
+export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider( {children}: AuthProviderProps ) {
   const [ user, setUser ] = useState<any>();
@@ -60,9 +60,8 @@ export function AuthProvider( {children}: AuthProviderProps ) {
     onGetUserFunction();
   }, []);
 
-  async function signIn({ email, password }) {
+  const signIn = async ({ email, password }) => {
     try {
-      
       const user = await createAuthenticationUser({ email, password });
       const token = user.authorization;
       const objectUser = {

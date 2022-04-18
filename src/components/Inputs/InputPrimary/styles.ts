@@ -16,10 +16,10 @@ export const Container = styled.div<ContainerProps>`
   ${props => props.styleContainer};
 
   p{
-    font-size: 0.8rem;
-    margin-left: 0.6rem;
+    font-size: 0.9rem;
     margin-top: 0.3rem;
     margin-bottom: 0;
+    color: #FF8A8A;
   }
 `;
 

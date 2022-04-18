@@ -3,24 +3,25 @@ import { useAuth } from "../contexts/AuthContext";
 import { GetServerSideProps } from "next";
 import { withSSRAuthLogged } from "../utils/withSSRAuthLogged";
 import { toast } from "react-toastify";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { InputPrimary } from "../components/Inputs/InputPrimary";
 import { 
   BoxButtonLogin,
   BoxContainer, 
   BoxTitle, 
   Container, 
-  ContainerInputs 
+  ContainerInputs, 
+  ForgotYourPassword
 } from "../styles/pageStyles/home/styles";
 
 import Router from "next/router";
+import * as yup from "yup"; 
+import Link from "next/link";
 
-
-/* import * as yup from "yup"; */
-
-/* const signInFormSchema = yup.object().shape({
-  email: yup.string().required("Digite seu e-mail cadastrado"),
+const signInFormSchema = yup.object().shape({
+  email: yup.string().email('Digite um e-mail válido').required("Digite seu e-mail cadastrado"),
   password: yup.string().required("Digite sua senha"),
-}); */
+}); 
 
 export default function Home() {
   const { signIn } = useAuth();
@@ -28,7 +29,12 @@ export default function Home() {
   const { 
     register, 
     handleSubmit, 
-  } = useForm();
+    clearErrors,
+    formState
+  } = useForm({
+    resolver: yupResolver(signInFormSchema)
+  });
+  const { errors } = formState;
 
   const handleSignIn = async (data) => {
     try {
@@ -42,27 +48,39 @@ export default function Home() {
   return(
     <Container>
       <BoxContainer>
-        <BoxTitle>Controle de Clientes v1.0</BoxTitle>
+        <BoxTitle>Faça seu login</BoxTitle>
+
+        {console.log(errors?.email?.message)}
 
         <ContainerInputs>
           <InputPrimary 
             id="email"
             name="email"
-            placeholder="E-mail"
+            titleInput="E-mail"
+            placeholder="contato@exemplo.com"
+            errorMessage={errors?.email?.message}
+            onClick={() => clearErrors("email")}
             {...register("email")}
           />
           <InputPrimary
             id="password"
             name="password"
             type="password"
-            placeholder="Senha"
+            titleInput="Senha"
+            placeholder="1234"
+            errorMessage={errors?.password?.message}
+            onClick={() => clearErrors("password")}
             {...register("password")}
           /> 
         </ContainerInputs>
 
         <BoxButtonLogin onClick={handleSubmit(handleSignIn)}>
-          Login
+          Continuar
         </BoxButtonLogin>
+
+        <Link href="#" passHref>
+          <ForgotYourPassword>Esqueceu sua senha?</ForgotYourPassword>
+        </Link>
 
       </BoxContainer>
     </Container>

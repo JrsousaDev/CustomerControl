@@ -5,11 +5,13 @@ import SkeletonInput from '../../Skeleton/SkeletonInput';
 import { Container, InLineInput, Input, Title } from './styles';
 
 export interface InputPrimaryProps extends InputHTMLAttributes<HTMLInputElement> {
+  id: string;
+  label?: string;
+  errorMessage?: string;
   isLoading?: boolean;
   titleInput?: string;
   styleInput?: CSSProp;
   styleContainer?: CSSProp;
-  error?: FieldError | { message: string },
   leftComponent?: ReactElement,
   rightComponent?: ReactElement,
   as?: any
@@ -20,9 +22,9 @@ const InputPrimaryBase: ForwardRefRenderFunction<HTMLInputElement, InputPrimaryP
   {
     titleInput,
     styleContainer,
+    errorMessage,
     styleInput,
     isLoading,
-    error,
     leftComponent,
     rightComponent,
     ...rest
@@ -35,24 +37,17 @@ const InputPrimaryBase: ForwardRefRenderFunction<HTMLInputElement, InputPrimaryP
       {
         <InLineInput>
           {leftComponent}
-
-          {
-            isLoading ?
-              <SkeletonInput />
-              :
-              <Input
-                ref={ref}
-                styleInput={styleInput}
-                error={!!error?.message}
-                {...rest}
-              />
-          }
-
+          <Input
+            ref={ref}
+            styleInput={styleInput}
+            error={errorMessage}
+            {...rest}
+          />
           {rightComponent}
         </InLineInput>
       }
 
-      {!!error?.message && <p>{error.message}</p>}
+     {!!errorMessage && <p>{errorMessage}</p>}
     </Container>
   )
 }

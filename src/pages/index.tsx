@@ -41,7 +41,8 @@ export default function Home() {
       await signIn(data);
       Router.push('/dashboard');
     } catch (err) {
-      toast.error(err)
+      if(err) toast.error(err);
+      if(!err) toast.error('Internal server error');
     }
   }
 
@@ -49,8 +50,6 @@ export default function Home() {
     <Container>
       <BoxContainer>
         <BoxTitle>Faça seu login</BoxTitle>
-
-        {console.log(errors?.email?.message)}
 
         <ContainerInputs>
           <InputPrimary 

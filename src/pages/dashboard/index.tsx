@@ -9,11 +9,11 @@ import getTokenId from "../../utils/getTokenID";
 
 import { ContainerSplitDashboard } from "../../styles/pageStyles/dashboard/styles";
 import { GetServerSideProps } from "next";
-import { getUserInID } from "../../services/user";
 import { IDashboardProps } from "../../interfaces/dashboard/IDashboard";
 import { useState } from "react";
 import { GlobalSection } from "../../styles/Global";
 import { withSSRAuth } from "../../utils/withSSRAuth";
+import { getAPIClient } from "../../services/axios";
 
 export default function Dashboard({ resCustomers, money }: IDashboardProps) {
   const [ customers, setCustomers ] = useState(resCustomers);
@@ -47,9 +47,10 @@ export default function Dashboard({ resCustomers, money }: IDashboardProps) {
 export const getServerSideProps: GetServerSideProps = withSSRAuth(
   async (context) => {
     const userId = await getTokenId(context, 'customerControl.token');
-    const user = await getUserInID({userId});
+    const api = getAPIClient(context)
+    const { data: user } = await api.post("/user/findone", {userId});
 
-    if(!user) {
+    if(!user){
       return{
         props:{}
       }
@@ -71,6 +72,10 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
           money: totalMoney || null
         }
       }
+    }
+
+    return{
+      props:{}
     }
   }
 )

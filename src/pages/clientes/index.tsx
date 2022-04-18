@@ -5,7 +5,7 @@ import { getUserInID } from "../../services/user";
 import { BsCalendar2CheckFill } from "react-icons/bs";
 import { withSSRAuth } from "../../utils/withSSRAuth";
 import { useQuery } from "react-query";
-
+import { getAPIClient } from "../../services/axios";
 import { 
   ContainerTable, 
   StatusAttentionTable, 
@@ -104,7 +104,14 @@ export default function Customers({ resCustomers, userId }) {
 export const getServerSideProps: GetServerSideProps = withSSRAuth(
   async (context) => {
     const userId = await getTokenId(context, 'customerControl.token');
-    const user = await getUserInID({userId});
+    const api = getAPIClient(context)
+    const { data: user } = await api.post("/user/findone", {userId});
+
+    if(!user){
+      return{
+        props:{}
+      }
+    }
   
     if (!user?.message && user) {
       const customers = await user.listCustomers?.map((list) => {
@@ -123,6 +130,9 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
           userId: userId || null,
         }
       }
+    }
+    return{
+      props:{}
     }
   }
 )

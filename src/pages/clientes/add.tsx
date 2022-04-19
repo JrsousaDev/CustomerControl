@@ -46,6 +46,8 @@ interface ICustomersAddProps {
 export default function CustomersAdd({ userId }: ICustomersAddProps) {
   const currentDate = moment().format('YYYY-MM-DD');
 
+  console.log('teste')
+
   const { 
     register, 
     handleSubmit, 

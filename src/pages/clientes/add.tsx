@@ -14,7 +14,7 @@ export default function CustomersAdd() {
     </GlobalSection>
 
     <DefaultAside />
-    <DefaultFooter className="footer"/>
+    <DefaultFooter />
   </GridLayout>
   )
 }

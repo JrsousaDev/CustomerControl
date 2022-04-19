@@ -20,7 +20,7 @@ export default function Dashboard({ resCustomers, money }: IDashboardProps) {
 
   return(
   <GridLayout>
-    <DefaultHeader title="Dashboard" className="header"/>
+    <DefaultHeader title="Dashboard" />
 
     <GlobalSection className="section">
       <ContainerSplitDashboard>
@@ -32,14 +32,14 @@ export default function Dashboard({ resCustomers, money }: IDashboardProps) {
           <CustomersIcon/>
         </DefaultDashboard>
 
-        <DefaultDashboard title="Faturamento mês anterior" values={money} bgColor="#0C9600">
+        {/* <DefaultDashboard title="Faturamento mês anterior" values={money} bgColor="#0C9600">
           <GiveMoneyIcon />
-        </DefaultDashboard>
+        </DefaultDashboard> */}
       </ContainerSplitDashboard>
     </GlobalSection>
 
-    <DefaultAside className="aside"/>
-    <DefaultFooter className="footer"/>
+    <DefaultAside />
+    <DefaultFooter />
   </GridLayout>
   )
 }

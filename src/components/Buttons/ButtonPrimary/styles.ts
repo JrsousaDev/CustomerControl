@@ -7,6 +7,7 @@ export const Container = styled.div`
 
 export const Button = styled.button`
  width: 100%;
+ height: 100%;
  background: #125B50;
  border: 1px solid #125B50;
  color: white;

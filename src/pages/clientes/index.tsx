@@ -128,7 +128,7 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
         return{
           _id: list.customerId?._id || null,
           name: list.customerId?.name || null,
-          dueDate: list.customerId?.contract.dueDate,
+          dueDate: list.customerId?.contract.dueDate || null,
           dueDateFormat: moment(list.customerId?.contract.dueDate).format('DD/MM/YYYY') || null,
           value: list.customerId?.contract.value.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}) || null,
         }

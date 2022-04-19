@@ -18,6 +18,7 @@ const ButtonPrimary: React.FC<ButtonPrimary> = ({
   styleContainer,
   styleButton,
   url,
+  ...rest
 }) => {
   return(
   <>
@@ -26,7 +27,7 @@ const ButtonPrimary: React.FC<ButtonPrimary> = ({
         <Container 
           style={styleContainer}
         >
-          <Button style={styleButton}>
+          <Button style={styleButton} {...rest}>
             {textButton}
           </Button>
         </Container>
@@ -36,7 +37,7 @@ const ButtonPrimary: React.FC<ButtonPrimary> = ({
       <Container 
         style={styleContainer}
       >
-        <Button style={styleButton}>
+        <Button style={styleButton} {...rest}>
           {textButton}
         </Button>
       </Container>

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const ContainerTable = styled.div`
 `
@@ -24,3 +24,4 @@ export const StatusCheckedTable = styled.div`
   background: green;
   color: #FFFFFF;
 `
+

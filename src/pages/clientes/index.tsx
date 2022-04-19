@@ -20,6 +20,7 @@ import GridLayout from "../../containers/GridLayout";
 import moment from 'moment';
 import ModalUpdateDueDate from "../../components/Modals/ModalUpdateDueDate";
 import getTokenId from "../../utils/getTokenID";
+import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 
 export default function Customers({ resCustomers, userId }) {
 
@@ -62,8 +63,17 @@ export default function Customers({ resCustomers, userId }) {
   />
 
   <GridLayout>
-    <DefaultHeader title="Lista de clientes" className="header"/>
+    <DefaultHeader title="Lista de clientes"/>
     <GlobalSection className="section">
+
+      <ButtonPrimary 
+        textButton="Adicionar Cliente"
+        styleContainer={{
+          marginBottom: '10px',
+        }}
+        url="/clientes/add"
+      />
+
       <ContainerTable>
         <MaterialTablesData 
           title="Clientes"
@@ -94,8 +104,8 @@ export default function Customers({ resCustomers, userId }) {
 
     </GlobalSection>
 
-    <DefaultAside className="aside"/>
-    <DefaultFooter className="footer"/>
+    <DefaultAside />
+    <DefaultFooter />
   </GridLayout>
   </>
   )

@@ -1,7 +1,6 @@
 import { useAuth } from "../../../contexts/AuthContext";
 import { IconNotify, IconUser } from "../../Icons/Icons";
 import { InputSearch } from "../../Inputs/InputSearch";
-import { IDefaultHeaderProps } from "./IDefaultHeader";
 import { 
   Container,
   C_Icons,
@@ -9,11 +8,15 @@ import {
   Header,
 } from "./styles";
 
-export default function DefaultHeader({ title, className }: IDefaultHeaderProps) {
+interface IDefaultHeaderProps {
+  title: string;
+}
+
+export default function DefaultHeader({ title }: IDefaultHeaderProps) {
   const { signOut } = useAuth();
 
   return(
-  <Header className={className}>
+  <Header className="header">
     <Container>
 
       <C_Text>

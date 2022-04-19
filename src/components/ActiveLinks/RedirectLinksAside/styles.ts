@@ -1,5 +1,9 @@
 import styled from 'styled-components';
-import { IRedirectLinksAsideProps } from './IRedirectLinksAside';
+
+export interface IRedirectLinksAsideProps {
+  asPath: string;
+  asHref: string;
+}
 
 export const RedirectLinks = styled.a<IRedirectLinksAsideProps>`
   max-width: 200px;

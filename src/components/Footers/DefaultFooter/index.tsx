@@ -1,6 +1,9 @@
-import { IFooterProps } from "./IFooter";
 import { FooterContainer } from "./styles";
 
-export default function Footer({className}: IFooterProps) {
-  return <FooterContainer className={className}>Copywriter Customer Control v1.0</FooterContainer>
+interface IFooterProps {
+
+}
+
+export default function Footer({}: IFooterProps) {
+  return <FooterContainer className="footer">Copywriter Customer Control v1.0</FooterContainer>
 }

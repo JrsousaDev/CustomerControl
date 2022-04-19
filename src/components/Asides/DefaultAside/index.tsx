@@ -1,7 +1,6 @@
 import Link from "next/link";
 import RedirectLinksAside from "../../ActiveLinks/RedirectLinksAside";
 
-import { IAsideProps } from "./IAside";
 import { 
   AsideBody, 
   AsideHeader, 
@@ -9,9 +8,12 @@ import {
   DefaultAsideContainer,
 } from "./styles";
 
-export default function DefaultAside({ className }: IAsideProps){
+interface IAsideProps {
+}
+
+export default function DefaultAside({}: IAsideProps){
   return(
-  <DefaultAsideContainer className={className}>
+  <DefaultAsideContainer className="aside">
     <ContainerAll>
 
       <AsideHeader>

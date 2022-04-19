@@ -68,8 +68,6 @@ export default function CustomersAdd({ userId }: ICustomersAddProps) {
     }
   }
 
-  console.log('oi')
-
   return(
     <GridLayout>
     <DefaultHeader title="Lista de clientes"/>

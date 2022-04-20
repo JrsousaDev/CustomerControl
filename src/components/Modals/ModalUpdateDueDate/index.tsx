@@ -28,7 +28,7 @@ export default function ModalUpdateDueDate({openModal, setOpenModal, customer, u
   const updateDueDateResponse = async () => {
     try {
       await updateDueDateCustomer({userId, customerId: customer._id, dueDate});
-      toast.success('Data de nascimento atualizada com sucesso!');
+      toast.success('Data de vencimento atualizada com sucesso!');
       refetchCustomer();
       hiddenModal();
     } catch (err) {

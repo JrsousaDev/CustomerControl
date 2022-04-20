@@ -56,7 +56,7 @@ export default function Customers({ resCustomers, userId }) {
 
   <ModalUpdateDueDate
     refetchCustomer={refetch}
-    userId="624a61003f400d5a198bb6bc"
+    userId={userId}
     customer={selectedCustomer} 
     openModal={openModalUpdateDueDate} 
     setOpenModal={setOpenModalUpdateDueDate}

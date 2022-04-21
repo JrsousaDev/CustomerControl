@@ -14,13 +14,32 @@ import { firstLetter } from "../../utils/firstLetter";
 import { sumeMoney } from "../../utils/sumeMoney";
 import { InputPrimary } from "../../components/Inputs/InputPrimary";
 import { TotalMoneyInputStyle } from "../../styles/pageStyles/mounths/styles";
+import { api } from "../../services/api";
+import { useQuery } from "react-query";
 
 interface IMounthsProps{
-  mounths: [{}],
+  resMounths: [{}],
   totalMoneyMounth: string,
+  userId: string,
 }
 
-export default function Mounths({mounths, totalMoneyMounth}: IMounthsProps) {
+export default function Mounths({resMounths, totalMoneyMounth, userId}: IMounthsProps) {
+
+  async function loadMounths() {
+    const { data } = await api.get(`/mounth/${userId}`);  
+    const mounths = data?.map(mounth => {
+      return{
+        _id: mounth._id,
+        mounthName: firstLetter(mounth.mounthName),
+        billing: mounth.billing.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}),
+        money: mounth.billing,
+        year: mounth.year,
+      }
+    });
+    return mounths
+  }
+
+  const { data: mounths } = useQuery("mounths", loadMounths, {initialData: resMounths});
 
   return(
   <GridLayout>
@@ -86,8 +105,9 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
 
     return{
       props:{
-        mounths,
+        resMounths: mounths,
         totalMoneyMounth,
+        userId,
       }
     }
   }

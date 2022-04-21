@@ -11,12 +11,16 @@ import { ContainerTable } from "../../styles/pageStyles/clientes/styles";
 import { withSSRAuth } from "../../utils/withSSRAuth";
 import { GetServerSideProps } from "next";
 import { firstLetter } from "../../utils/firstLetter";
+import { sumeMoney } from "../../utils/sumeMoney";
+import { InputPrimary } from "../../components/Inputs/InputPrimary";
+import { TotalMoneyInputStyle } from "../../styles/pageStyles/mounths/styles";
 
 interface IMounthsProps{
-  mounths: [{}]
+  mounths: [{}],
+  totalMoneyMounth: string,
 }
 
-export default function Mounths({mounths}: IMounthsProps) {
+export default function Mounths({mounths, totalMoneyMounth}: IMounthsProps) {
 
   return(
   <GridLayout>
@@ -28,15 +32,26 @@ export default function Mounths({mounths}: IMounthsProps) {
         <MaterialTablesData 
           title="Meses"
           columns={[        
-            { title: 'Mês', field: 'mounthName' },
-            { title: 'Faturamento', field: 'billing'},
+            { title: 'Mês', field: 'mounthName', filtering: false },
+            { title: 'Faturamento', field: 'billing', filtering: false},
             { title: 'Ano', field: 'year' },
           ]}
+          options={{filtering: true}}
           actions={[]}
           data={mounths}
         />
 
       </ContainerTable>
+      
+      <InputPrimary 
+        titleInput="Faturamento Total"
+        id="totalMoneyMounth"
+        styleContainer={{maxWidth: '10rem', marginTop: '15px'}}
+        styleInput={TotalMoneyInputStyle}
+        value={totalMoneyMounth}
+        disabled
+      />
+
     </GlobalSection>
 
     <DefaultAside />
@@ -62,13 +77,17 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
         _id: mounth._id,
         mounthName: firstLetter(mounth.mounthName),
         billing: mounth.billing.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}),
+        money: mounth.billing,
         year: mounth.year,
       }
-    })
+    });
+
+    const totalMoneyMounth = sumeMoney(mounths)
 
     return{
       props:{
-        mounths
+        mounths,
+        totalMoneyMounth,
       }
     }
   }

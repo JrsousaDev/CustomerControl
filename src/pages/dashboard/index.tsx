@@ -14,6 +14,7 @@ import { useState } from "react";
 import { GlobalSection } from "../../styles/Global";
 import { withSSRAuth } from "../../utils/withSSRAuth";
 import { getAPIClient } from "../../services/axios";
+import { sumeMoney } from "../../utils/sumeMoney";
 
 export default function Dashboard({ resCustomers, money }: IDashboardProps) {
   const [ customers, setCustomers ] = useState(resCustomers);
@@ -63,8 +64,7 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
         }
       });
     
-      const totalMoney = customers?.reduce((total, customer) => total + customer.money, 0)
-      .toLocaleString('pt-br', {style: 'currency', currency: 'BRL'});
+      const totalMoney = sumeMoney(customers);
     
       return{
         props:{

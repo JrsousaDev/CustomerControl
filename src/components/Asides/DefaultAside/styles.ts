@@ -37,6 +37,10 @@ export const AsideBody = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: 680px){
+    padding-top: 1.5rem;
+  }
 `
 
 export const RedirectLinks = styled.a`

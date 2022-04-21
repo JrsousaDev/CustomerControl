@@ -9,14 +9,33 @@ import getTokenId from "../../utils/getTokenID";
 
 import { ContainerSplitDashboard } from "../../styles/pageStyles/dashboard/styles";
 import { GetServerSideProps } from "next";
-import { IDashboardProps } from "../../interfaces/dashboard/IDashboard";
 import { useState } from "react";
 import { GlobalSection } from "../../styles/Global";
 import { withSSRAuth } from "../../utils/withSSRAuth";
 import { getAPIClient } from "../../services/axios";
+import { sumeMoney } from "../../utils/sumeMoney";
+import { useQuery } from "react-query";
+import { getUserInID } from "../../services/user";
 
-export default function Dashboard({ resCustomers, money }: IDashboardProps) {
-  const [ customers, setCustomers ] = useState(resCustomers);
+interface IDashboardProps {
+  resCustomers: any,
+  resMoney: string,
+  userId: string,
+}
+
+export default function Dashboard({ resCustomers, resMoney, userId }: IDashboardProps) {
+
+  async function loadCustomers() {
+    const user = await getUserInID({userId});
+    const customers = await user.listCustomers?.map((list) => {
+      return{
+        money: list.customerId.contract.value
+      }
+    });
+    return customers
+  }
+
+  const { data: customers } = useQuery("customers", loadCustomers, {initialData: resCustomers});
 
   return(
   <GridLayout>
@@ -24,7 +43,7 @@ export default function Dashboard({ resCustomers, money }: IDashboardProps) {
 
     <GlobalSection className="section">
       <ContainerSplitDashboard>
-        <DefaultDashboard title="Soma de contratos" values={money} bgColor="#0C9600">
+        <DefaultDashboard title="Soma de contratos" values={resMoney} bgColor="#0C9600">
           <GiveMoneyIcon/>
         </DefaultDashboard>
 
@@ -63,13 +82,13 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
         }
       });
     
-      const totalMoney = customers?.reduce((total, customer) => total + customer.money, 0)
-      .toLocaleString('pt-br', {style: 'currency', currency: 'BRL'});
+      const totalMoney = sumeMoney(customers);
     
       return{
         props:{
           resCustomers: customers || null,
-          money: totalMoney || null
+          resMoney: totalMoney || null,
+          userId,
         }
       }
     }

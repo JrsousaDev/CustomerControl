@@ -31,6 +31,10 @@ export const Division = styled.div`
   justify-content: center;
   align-items: center;
   gap: 10px;
+
+  @media (max-width: 450px){
+    grid-template-columns: 1fr;
+  }
 `
 
 export const InputStyle = css`

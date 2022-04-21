@@ -3,16 +3,20 @@ import { IconNotify, IconUser } from "../../Icons/Icons";
 import { InputSearch } from "../../Inputs/InputSearch";
 import { 
   Container,
+  C_Hamburg,
   C_Icons,
   C_Text,
   Header,
 } from "./styles";
+import { GiHamburgerMenu } from 'react-icons/gi'
+import { useLayout } from "../../../contexts/LayoutContext";
 
 interface IDefaultHeaderProps {
   title: string;
 }
 
 export default function DefaultHeader({ title }: IDefaultHeaderProps) {
+  const { toggleHeightAsideMobile } = useLayout();
   const { signOut } = useAuth();
 
   return(
@@ -22,6 +26,13 @@ export default function DefaultHeader({ title }: IDefaultHeaderProps) {
       <C_Text>
         {title}
       </C_Text>
+
+      <C_Hamburg>
+        <GiHamburgerMenu 
+          style={{cursor: 'pointer'}}
+          onClick={toggleHeightAsideMobile}
+        />
+      </C_Hamburg>
 
       <C_Icons>
         <InputSearch 

@@ -1,4 +1,4 @@
-import { CREATE_CUSTOMER, UPDATE_DUEDATE_CUSTOMER } from "../constants/routes";
+import { CREATE_CUSTOMER, DELETE_CUSTOMER, UPDATE_DUEDATE_CUSTOMER } from "../constants/routes";
 import { api } from "./api";
 
 interface IUpdateDueDate {
@@ -45,6 +45,19 @@ export async function createCustomer({
   const data = { userId, name, responsibleName, email, phone, value, dueDate, paymentMethod, serviceStart };
   try {
     const response = await api.post(CREATE_CUSTOMER, data);
+    return response.data
+  } catch (error) {
+    if (error.response){
+      return error.response.data
+    }
+  }
+}
+
+export async function deleteCustomer({userId, customerId}) {
+  const data = {userId, customerId}
+
+  try {
+    const response = await api.delete(DELETE_CUSTOMER, {data});
     return response.data
   } catch (error) {
     if (error.response){

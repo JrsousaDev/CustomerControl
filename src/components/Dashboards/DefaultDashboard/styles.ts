@@ -15,12 +15,15 @@ export const ContainerBase = styled.div`
 
 export const Container = styled.div`
   width: 100%;
-  margin: 2rem 1rem;
   border-bottom: 1px solid #D9D7D7;
+  display: flex;
+  justify-content: space-around;
+  margin: 1rem 0;
 `
 
 export const ContainerIcon = styled.div`
   position: relative;
+  margin-top: -40px;
 `
 
 export const ContainerInformation = styled.div`
@@ -40,14 +43,11 @@ export const ContainerInformation = styled.div`
 `
 
 export const Badge = styled.div<IBadgeProps>`
-  position: absolute;
   background-color: ${props => props.bgColor};
   width: 6.25rem;
   height: 6.25rem;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
-  top: -60px;
-  left: 10px;
 `
 
 export const ContainerImg = styled.div`

@@ -6,6 +6,9 @@ import { BsCalendar2CheckFill } from "react-icons/bs";
 import { withSSRAuth } from "../../utils/withSSRAuth";
 import { useQuery } from "react-query";
 import { getAPIClient } from "../../services/axios";
+import { deleteCustomer } from "../../services/customer";
+import { toast } from "react-toastify";
+import { AiFillDelete } from "react-icons/ai";
 import { 
   ContainerTable, 
   StatusAttentionTable, 
@@ -49,6 +52,16 @@ export default function Customers({ resCustomers, userId }) {
   const updateDueDate = async ({customer}) => {
     setOpenModalUpdateDueDate(true);
     setSelectedCustomer(customer);
+  }
+
+  const handleDeleteCustomer = async ({userId, customerId}) => {
+    try {
+      await deleteCustomer({userId, customerId});
+      toast.success('Paciente deletado');
+      refetch();
+    } catch (error) {
+      toast.error('Internal server error');
+    }
   }
 
   return(
@@ -96,6 +109,14 @@ export default function Customers({ resCustomers, userId }) {
               icon: () => <BsCalendar2CheckFill />,
               tooltip: 'Atualizar vencimento',
               onClick: (event, rowData) => updateDueDate({customer: rowData})
+            },
+            {
+              icon: () => <AiFillDelete />,
+              tooltip: 'Excluir cliente',
+              onClick: (event, rowData) => {
+                const res = confirm('Você tem certeza que deseja excluir o cliente: '+rowData.name);
+                if(res) handleDeleteCustomer({userId, customerId: rowData._id});
+              }
             }
           ]}
           data={customers}

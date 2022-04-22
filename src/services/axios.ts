@@ -6,7 +6,7 @@ export function getAPIClient(context?: any) {
   const { "customerControl.token": token } = parseCookies(context);
 
   const api = axios.create({
-    baseURL: BASE_URL_BACKEND
+    baseURL: process.env.NEXT_PUBLIC_BASE_URL_BACKEND
   });
 
   if (token) {

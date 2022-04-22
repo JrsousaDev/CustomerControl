@@ -52,6 +52,12 @@ body, input, textarea, button, select {
   font: 400 1rem "Roboto", sans-serif;
 }
 
+input[type="date"]{
+  display:block;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+}
+
 button {
   cursor: pointer;
 }

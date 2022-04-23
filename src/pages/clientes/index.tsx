@@ -6,9 +6,11 @@ import { BsCalendar2CheckFill } from "react-icons/bs";
 import { withSSRAuth } from "../../utils/withSSRAuth";
 import { useQuery } from "react-query";
 import { getAPIClient } from "../../services/axios";
-import { deleteCustomer } from "../../services/customer";
+import { deleteCustomer, paymentSuccess } from "../../services/customer";
 import { toast } from "react-toastify";
 import { AiFillDelete } from "react-icons/ai";
+import { mounthsMaterialTable } from "../../constants/mounths";
+import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { 
   ContainerTable, 
   StatusAttentionTable, 
@@ -36,6 +38,7 @@ export default function Customers({ resCustomers, userId }) {
         name: list.customerId?.name || null,
         dueDate: list.customerId?.contract.dueDate,
         dueDateFormat: moment(list.customerId?.contract.dueDate).format('DD/MM/YYYY') || null,
+        mounthFormat: moment(list.customerId?.contract.dueDate).format('MM/YYYY'),
         value: list.customerId?.contract.value.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}) || null,
       }
     });
@@ -64,6 +67,16 @@ export default function Customers({ resCustomers, userId }) {
     }
   }
 
+  const handleSuccessPayment = async ({userId, customerId}) => {
+    try {
+      await paymentSuccess({userId, customerId});
+      toast.success('Pagamento recebido!');
+      refetch();
+    } catch (error) {
+      toast.error('Internal server error!')
+    }
+  }
+
   return(
   <>
 
@@ -81,9 +94,7 @@ export default function Customers({ resCustomers, userId }) {
 
       <ButtonPrimary 
         textButton="Adicionar Cliente"
-        styleContainer={{
-          marginBottom: '10px',
-        }}
+        styleContainer={{marginBottom: '10px'}}
         url="/clientes/add"
       />
 
@@ -91,9 +102,10 @@ export default function Customers({ resCustomers, userId }) {
         <MaterialTablesData 
           title="Clientes"
           columns={[        
-            { title: 'Empresa', field: 'name' },
-            { title: 'Contrato', field: 'value'},
-            { title: 'Data de vencimento', field: 'dueDateFormat' },
+            { title: 'Empresa',  field: 'name',  filtering: false },
+            { title: 'Contrato', field: 'value', filtering: false },
+            { title: 'Data de vencimento', field: 'dueDateFormat', filtering: false},
+            { title: 'Mês', field: 'mounthFormat', lookup: mounthsMaterialTable },
             {
               title: 'Status', 
               field: '',
@@ -104,18 +116,27 @@ export default function Customers({ resCustomers, userId }) {
               }
             },
           ]}
+          options={{filtering: true}}
           actions={[
             {
               icon: () => <BsCalendar2CheckFill />,
               tooltip: 'Atualizar vencimento',
-              onClick: (event, rowData) => updateDueDate({customer: rowData})
+              onClick: (event, rowData) => updateDueDate({ customer: rowData })
             },
             {
               icon: () => <AiFillDelete />,
               tooltip: 'Excluir cliente',
               onClick: (event, rowData) => {
                 const res = confirm('Você tem certeza que deseja excluir o cliente: '+rowData.name);
-                if(res) handleDeleteCustomer({userId, customerId: rowData._id});
+                if (res) handleDeleteCustomer({ userId, customerId: rowData._id });
+              }
+            },
+            {
+              icon: () => <RiMoneyDollarCircleFill />,
+              tooltip: 'Pagamento Efetuado',
+              onClick: (event, rowData) => {
+                const res = confirm('Você confirma o recebimento de: '+rowData.name);
+                if (res) handleSuccessPayment({userId, customerId: rowData._id});
               }
             }
           ]}
@@ -151,6 +172,7 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
           name: list.customerId?.name || null,
           dueDate: list.customerId?.contract.dueDate || null,
           dueDateFormat: moment(list.customerId?.contract.dueDate).format('DD/MM/YYYY') || null,
+          mounthFormat: moment(list.customerId?.contract.dueDate).format('MM/YYYY'),
           value: list.customerId?.contract.value.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}) || null,
         }
       });

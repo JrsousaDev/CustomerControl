@@ -5,6 +5,7 @@ interface IColumns {
   field: string;
   filtering?: any;
   render?: (rowData) => ReactElement;
+  lookup?: any;
 }
 
 export interface IMaterialTableProps{

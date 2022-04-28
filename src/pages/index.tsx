@@ -11,12 +11,15 @@ import {
   BoxTitle, 
   Container, 
   ContainerInputs, 
-  ForgotYourPassword
+  ForgotYourPassword,
+  BoxButtonLoginContainer
 } from "../styles/pageStyles/home/styles";
 
 import Router from "next/router";
 import * as yup from "yup"; 
 import Link from "next/link";
+import { useState } from "react";
+import ButtonPrimary from "../components/Buttons/ButtonPrimary";
 
 const signInFormSchema = yup.object().shape({
   email: yup.string().email('Digite um e-mail válido').required("Digite seu e-mail cadastrado"),
@@ -24,6 +27,7 @@ const signInFormSchema = yup.object().shape({
 }); 
 
 export default function Home() {
+  const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
 
   const { 
@@ -37,13 +41,17 @@ export default function Home() {
   const { errors } = formState;
 
   const handleSignIn = async (data) => {
+    setLoading(true)
     try {
       await signIn(data);
       Router.push('/dashboard');
     } catch (err) {
       if(err) toast.error(err);
       if(!err) toast.error('Internal server error');
+    } finally {
+      setLoading(false)
     }
+    setLoading(false)
   }
 
   return(
@@ -73,9 +81,14 @@ export default function Home() {
           /> 
         </ContainerInputs>
 
-        <BoxButtonLogin onClick={handleSubmit(handleSignIn)}>
-          Continuar
-        </BoxButtonLogin>
+        <ButtonPrimary 
+          textButton="Continuar"
+          onClick={handleSubmit(handleSignIn)} 
+          styleButton={BoxButtonLogin}
+          styleContainer={BoxButtonLoginContainer}
+          disabled={loading} 
+          loading={loading}
+        />
 
         <Link href="#" passHref>
           <ForgotYourPassword>Esqueceu sua senha?</ForgotYourPassword>

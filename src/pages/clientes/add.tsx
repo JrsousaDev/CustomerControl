@@ -27,6 +27,7 @@ import { GetServerSideProps } from "next";
 import getTokenId from "../../utils/getTokenID";
 import { createCustomer } from "../../services/customer";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 const createCustomerFormSchema = yup.object().shape({
   name: yup.string().required("Digite o nome da empresa"),
@@ -45,6 +46,7 @@ interface ICustomersAddProps {
 
 export default function CustomersAdd({ userId }: ICustomersAddProps) {
   const currentDate = moment().format('YYYY-MM-DD');
+  const [ loading, setLoading ] = useState(false);
 
   const { 
     register, 
@@ -57,6 +59,7 @@ export default function CustomersAdd({ userId }: ICustomersAddProps) {
   const { errors } = formState;
 
   const handleCreateCustomer = async (data) => {
+    setLoading(true)
     data.userId = userId;
 
     try {
@@ -65,7 +68,11 @@ export default function CustomersAdd({ userId }: ICustomersAddProps) {
     } catch (err) {
       if(err) toast.error(err);
       if(!err) toast.error('Internal server error');
+    } finally {
+      setLoading(false)
     }
+
+    setLoading(false)
   }
 
   return(
@@ -189,6 +196,7 @@ export default function CustomersAdd({ userId }: ICustomersAddProps) {
             <ButtonPrimary 
               onClick={(handleSubmit(handleCreateCustomer))}
               textButton="Salvar cliente"
+              loading={loading}
               styleContainer={{
                 margin: 'auto',
                 marginTop: '10px',

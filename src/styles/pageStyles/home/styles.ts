@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Container = styled.div`
   display: flex;
@@ -48,12 +48,10 @@ export const ContainerInputs = styled.div`
   gap: 40px;
 `
 
-export const BoxButtonLogin = styled.button`
+export const BoxButtonLogin = css`
   margin: auto;
-  border: none;
-  max-width: 400px;
   width: 100%;
-  height: 70px;
+  
   border-radius: 5px;
   font-weight: bold;
 
@@ -63,15 +61,19 @@ export const BoxButtonLogin = styled.button`
   border: 2px solid #999;
   background-color: transparent;
   color: #999;
-
-  transition: all 0.4s;
-
-  &:hover{
-    border: 2px solid #066A75;
-    color: #FFFFFF;
-    background-color: #066A75;
-  }
 `
+
+export const BoxButtonLoginContainer = css`
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  border: none;
+  max-width: 400px;
+  width: 100%;
+  height: 70px;
+`
+
 export const ForgotYourPassword = styled.div`
   text-align: center;
   cursor: pointer;

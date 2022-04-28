@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AnchorHTMLAttributes, ButtonHTMLAttributes } from "react";
+import SpinnerLoader from "../../Spinners/SpinnerCircular";
 import { 
   Button,
   Container,
@@ -11,6 +12,8 @@ AnchorHTMLAttributes<HTMLAnchorElement> & {
   styleContainer?: any;
   styleButton?: any;
   url?: string;
+  loading?: boolean;
+  sizeSpinner?: number;
 }
 
 const ButtonPrimary: React.FC<ButtonPrimary> = ({
@@ -18,6 +21,8 @@ const ButtonPrimary: React.FC<ButtonPrimary> = ({
   styleContainer,
   styleButton,
   url,
+  loading,
+  sizeSpinner,
   ...rest
 }) => {
   return(
@@ -28,7 +33,11 @@ const ButtonPrimary: React.FC<ButtonPrimary> = ({
           style={styleContainer}
         >
           <Button style={styleButton} {...rest}>
-            {textButton}
+          {
+            loading 
+            ? <SpinnerLoader colorSpinner="currentColor" loading={loading} sizeSpinner={sizeSpinner}/> 
+            : textButton
+          }
           </Button>
         </Container>
       </Link>
@@ -38,7 +47,11 @@ const ButtonPrimary: React.FC<ButtonPrimary> = ({
         style={styleContainer}
       >
         <Button style={styleButton} {...rest}>
-          {textButton}
+          {
+            loading 
+            ? <SpinnerLoader colorSpinner="currentColor" loading={loading} sizeSpinner={sizeSpinner}/> 
+            : textButton
+          }
         </Button>
       </Container>
     }

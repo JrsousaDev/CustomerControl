@@ -1,16 +1,11 @@
 import DefaultDashboard from "../../components/Dashboards/DefaultDashboard";
-import DefaultFooter from "../../components/Footers/DefaultFooter";
-import DefaultHeader from "../../components/Headers/DefaultHeader";
-import DefaultAside from "../../components/Asides/DefaultAside";
-import GridLayout from "../../containers/GridLayout";
+import DefaultGridLayout from "../../containers/Layouts/DefaultGridLayout";
 import GiveMoneyIcon from "/public/assets/giveMoney.svg";
 import CustomersIcon from "/public/assets/customers.svg";
 import getTokenId from "../../utils/getTokenID";
 
 import { ContainerSplitDashboard } from "../../styles/pageStyles/dashboard/styles";
 import { GetServerSideProps } from "next";
-import { useState } from "react";
-import { GlobalSection } from "../../styles/Global";
 import { withSSRAuth } from "../../utils/withSSRAuth";
 import { getAPIClient } from "../../services/axios";
 import { sumeMoney } from "../../utils/sumeMoney";
@@ -26,40 +21,33 @@ interface IDashboardProps {
 export default function Dashboard({ resCustomers, resMoney, userId }: IDashboardProps) {
 
   async function loadCustomers() {
-    const user = await getUserInID({userId});
+    const user = await getUserInID({ userId });
     const customers = await user.listCustomers?.map((list) => {
-      return{
+      return {
         money: list.customerId.contract.value
       }
     });
     return customers
   }
 
-  const { data: customers } = useQuery("customers", loadCustomers, {initialData: resCustomers});
+  const { data: customers } = useQuery("customers", loadCustomers, { initialData: resCustomers });
 
-  return(
-  <GridLayout>
-    <DefaultHeader title="Dashboard" />
-
-    <GlobalSection className="section">
+  return (
+    <DefaultGridLayout headerTitle="Dashboard">
       <ContainerSplitDashboard>
         <DefaultDashboard title="Soma de contratos" values={resMoney} bgColor="#0C9600">
-          <GiveMoneyIcon/>
+          <GiveMoneyIcon />
         </DefaultDashboard>
 
         <DefaultDashboard title="Quant. de clientes" values={customers?.length || '0'} bgColor="#272826">
-          <CustomersIcon/>
+          <CustomersIcon />
         </DefaultDashboard>
 
         {/* <DefaultDashboard title="Faturamento mês anterior" values={money} bgColor="#0C9600">
           <GiveMoneyIcon />
         </DefaultDashboard> */}
       </ContainerSplitDashboard>
-    </GlobalSection>
-
-    <DefaultAside />
-    <DefaultFooter />
-  </GridLayout>
+    </DefaultGridLayout>
   )
 }
 
@@ -67,25 +55,25 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
   async (context) => {
     const userId = await getTokenId(context, 'customerControl.token');
     const api = getAPIClient(context)
-    const { data: user } = await api.post("/user/findone", {userId});
+    const { data: user } = await api.post("/user/findone", { userId });
 
-    if(!user){
-      return{
-        props:{}
+    if (!user) {
+      return {
+        props: {}
       }
     }
-  
-    if(!user?.message && user) {
+
+    if (!user?.message && user) {
       const customers = user.listCustomers?.map((list) => {
-        return{
+        return {
           money: list.customerId.contract.value
         }
       });
-    
+
       const totalMoney = sumeMoney(customers);
-    
-      return{
-        props:{
+
+      return {
+        props: {
           resCustomers: customers || null,
           resMoney: totalMoney || null,
           userId,
@@ -93,8 +81,8 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
       }
     }
 
-    return{
-      props:{}
+    return {
+      props: {}
     }
   }
 )

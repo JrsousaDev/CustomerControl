@@ -2,7 +2,7 @@ import DefaultAside from "../../components/Asides/DefaultAside";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import DefaultFooter from "../../components/Footers/DefaultFooter";
 import DefaultHeader from "../../components/Headers/DefaultHeader";
-import GridLayout from "../../containers/GridLayout";
+import GridLayout from "../../containers/Layouts/DefaultGridLayout";
 import InputMask from 'react-input-mask';
 import CurrencyInput from 'react-currency-masked-input';
 import moment from "moment";

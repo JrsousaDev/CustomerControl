@@ -1,12 +1,16 @@
-import DefaultAside from "../../components/Asides/DefaultAside";
-import DefaultFooter from "../../components/Footers/DefaultFooter";
+import { TodoList } from "../../components/TodoList";
 import DefaultGridLayout from "../../containers/Layouts/DefaultGridLayout";
-import { GlobalSection } from "../../styles/Global";
 
-export default function TodoList() {
+import { Box } from "../../styles/pageStyles/todolist/styles";
+
+export default function PageTodoList() {
   return(
-    <DefaultGridLayout>
+    <DefaultGridLayout headerTitle="Lista de Tarefas">
       
+      <Box>
+        <TodoList />
+      </Box>
+
     </DefaultGridLayout>
   )
 }

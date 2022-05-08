@@ -48,7 +48,7 @@ export const ContainerInputs = styled.div`
   gap: 40px;
 `
 
-export const BoxButtonLogin = css`
+/* export const CSSBoxButtonLogin = css`
   margin: auto;
   width: 100%;
   
@@ -56,14 +56,13 @@ export const BoxButtonLogin = css`
   font-weight: bold;
 
   text-transform: uppercase;
-  color: white;
   
   border: 2px solid #999;
   background-color: transparent;
-  color: #999;
+  color: #998;
 `
 
-export const BoxButtonLoginContainer = css`
+export const CSSButtonLoginContainer = css`
   display: grid;
   justify-content: center;
   align-items: center;
@@ -72,7 +71,7 @@ export const BoxButtonLoginContainer = css`
   max-width: 400px;
   width: 100%;
   height: 70px;
-`
+` */
 
 export const ForgotYourPassword = styled.div`
   text-align: center;

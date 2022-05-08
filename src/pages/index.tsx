@@ -6,13 +6,13 @@ import { toast } from "react-toastify";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { InputPrimary } from "../components/Inputs/InputPrimary";
 import { 
-  BoxButtonLogin,
+/*   CSSBoxButtonLogin,
+  CSSButtonLoginContainer */
   BoxContainer, 
   BoxTitle, 
   Container, 
   ContainerInputs, 
   ForgotYourPassword,
-  BoxButtonLoginContainer
 } from "../styles/pageStyles/home/styles";
 
 import Router from "next/router";
@@ -84,8 +84,26 @@ export default function Home() {
         <ButtonPrimary 
           textButton="Continuar"
           onClick={handleSubmit(handleSignIn)} 
-          styleButton={BoxButtonLogin}
-          styleContainer={BoxButtonLoginContainer}
+          styleButton={{
+            margin: 'auto',
+            width: '100%',
+            borderRadius: '5px',
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
+            border: '2px solid #999',
+            backgroundColor: 'transparent',
+            color: '#999',
+          }}
+          styleContainer={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            margin: 'auto',
+            border: 'none',
+            maxWidth: '400px',
+            width: '100%',
+            height: '70px',
+          }}
           disabled={loading} 
           loading={loading}
         />

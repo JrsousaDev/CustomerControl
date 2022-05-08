@@ -66,7 +66,7 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
     if (!user?.message && user) {
       const customers = user.listCustomers?.map((list) => {
         return {
-          money: list.customerId.contract.value
+          money: list.customerId?.contract?.value || null
         }
       });
 

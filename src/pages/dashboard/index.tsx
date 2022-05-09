@@ -11,6 +11,7 @@ import { getAPIClient } from "../../services/axios";
 import { sumeMoney } from "../../utils/sumeMoney";
 import { useQuery } from "react-query";
 import { getUserInID } from "../../services/user";
+import Head from "next/head";
 
 interface IDashboardProps {
   resCustomers: any,
@@ -33,21 +34,27 @@ export default function Dashboard({ resCustomers, resMoney, userId }: IDashboard
   const { data: customers } = useQuery("customers", loadCustomers, { initialData: resCustomers });
 
   return (
-    <DefaultGridLayout headerTitle="Dashboard">
-      <ContainerSplitDashboard>
-        <DefaultDashboard title="Soma de contratos" values={resMoney} bgColor="#0C9600">
-          <GiveMoneyIcon />
-        </DefaultDashboard>
+    <>
+      <Head>
+        <title>Dashboard | Customer Controll</title>
+      </Head>
 
-        <DefaultDashboard title="Quant. de clientes" values={customers?.length || '0'} bgColor="#272826">
-          <CustomersIcon />
-        </DefaultDashboard>
+      <DefaultGridLayout headerTitle="Dashboard">
+        <ContainerSplitDashboard>
+          <DefaultDashboard title="Soma de contratos" values={resMoney} bgColor="#0C9600">
+            <GiveMoneyIcon />
+          </DefaultDashboard>
 
-        {/* <DefaultDashboard title="Faturamento mês anterior" values={money} bgColor="#0C9600">
+          <DefaultDashboard title="Quant. de clientes" values={customers?.length || '0'} bgColor="#272826">
+            <CustomersIcon />
+          </DefaultDashboard>
+
+          {/* <DefaultDashboard title="Faturamento mês anterior" values={money} bgColor="#0C9600">
           <GiveMoneyIcon />
         </DefaultDashboard> */}
-      </ContainerSplitDashboard>
-    </DefaultGridLayout>
+        </ContainerSplitDashboard>
+      </DefaultGridLayout>
+    </>
   )
 }
 

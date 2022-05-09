@@ -23,6 +23,7 @@ import moment from 'moment';
 import ModalUpdateDueDate from "../../components/Modals/ModalUpdateDueDate";
 import getTokenId from "../../utils/getTokenID";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
+import Head from "next/head";
 
 export default function Customers({ resCustomers, userId }) {
 
@@ -76,6 +77,10 @@ export default function Customers({ resCustomers, userId }) {
 
   return (
     <>
+
+      <Head>
+        <title>Lista de Clientes | Customer Controll</title>
+      </Head>
 
       <ModalUpdateDueDate
         refetchCustomer={refetch}

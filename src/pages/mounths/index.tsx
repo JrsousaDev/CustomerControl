@@ -1,6 +1,7 @@
 import getTokenId from "../../utils/getTokenID";
 import MaterialTablesData from "../../components/Tables/MaterialTablesData";
 import GridLayout from "../../containers/Layouts/DefaultGridLayout";
+import Head from "next/head";
 
 import { getAPIClient } from "../../services/axios";
 import { ContainerTable } from "../../styles/pageStyles/clientes/styles";
@@ -38,32 +39,38 @@ export default function Mounths({ resMounths, totalMoneyMounth, userId }: IMount
   const { data: mounths } = useQuery("mounths", loadMounths, { initialData: resMounths });
 
   return (
-    <GridLayout headerTitle="Faturamento por mês">
-      <ContainerTable>
+    <>
+      <Head>
+        <title>Faturamento por mês | Customer Controll</title>
+      </Head>
 
-        <MaterialTablesData
-          title="Meses"
-          columns={[
-            { title: 'Mês', field: 'mounthName', filtering: false },
-            { title: 'Faturamento', field: 'billing', filtering: false },
-            { title: 'Ano', field: 'year' },
-          ]}
-          options={{ filtering: true }}
-          actions={[]}
-          data={mounths}
+      <GridLayout headerTitle="Faturamento por mês">
+        <ContainerTable>
+
+          <MaterialTablesData
+            title="Meses"
+            columns={[
+              { title: 'Mês', field: 'mounthName', filtering: false },
+              { title: 'Faturamento', field: 'billing', filtering: false },
+              { title: 'Ano', field: 'year' },
+            ]}
+            options={{ filtering: true }}
+            actions={[]}
+            data={mounths}
+          />
+
+        </ContainerTable>
+
+        <InputPrimary
+          titleInput="Faturamento Total"
+          id="totalMoneyMounth"
+          styleContainer={{ maxWidth: '10rem', marginTop: '15px' }}
+          styleInput={TotalMoneyInputStyle}
+          value={totalMoneyMounth}
+          disabled
         />
-
-      </ContainerTable>
-
-      <InputPrimary
-        titleInput="Faturamento Total"
-        id="totalMoneyMounth"
-        styleContainer={{ maxWidth: '10rem', marginTop: '15px' }}
-        styleInput={TotalMoneyInputStyle}
-        value={totalMoneyMounth}
-        disabled
-      />
-    </GridLayout>
+      </GridLayout>
+    </>
   )
 }
 

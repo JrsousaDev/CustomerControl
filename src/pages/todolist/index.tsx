@@ -1,16 +1,23 @@
-import { TodoList } from "../../components/TodoList";
+import Head from "next/head";
 import DefaultGridLayout from "../../containers/Layouts/DefaultGridLayout";
 
+import { TodoList } from "../../components/TodoList";
 import { Box } from "../../styles/pageStyles/todolist/styles";
 
 export default function PageTodoList() {
-  return(
-    <DefaultGridLayout headerTitle="Lista de Tarefas">
+  return (
+    <>
+      <Head>
+        <title>Lista de tarefas | Customer Controll</title>
+      </Head>
       
-      <Box>
-        <TodoList />
-      </Box>
+      <DefaultGridLayout headerTitle="Lista de Tarefas">
 
-    </DefaultGridLayout>
+        <Box>
+          <TodoList />
+        </Box>
+
+      </DefaultGridLayout>
+    </>
   )
 }

@@ -1,8 +1,6 @@
 import React, { forwardRef, InputHTMLAttributes, ForwardRefRenderFunction, ReactElement } from 'react';
-import { FieldError } from 'react-hook-form';
 import { CSSProp } from 'styled-components';
-import SkeletonInput from '../../Skeleton/SkeletonInput';
-import { Container, InLineInput, Input, Title } from './styles';
+import { Container, InLineInput, Input, RightIcon, Title, LeftIcon } from './styles';
 
 export interface InputPrimaryProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
@@ -14,6 +12,8 @@ export interface InputPrimaryProps extends InputHTMLAttributes<HTMLInputElement>
   styleContainer?: CSSProp;
   leftComponent?: ReactElement,
   rightComponent?: ReactElement,
+  iconRight?: ReactElement,
+  iconLeft?: ReactElement,
   as?: any
   mask?: any
 }
@@ -27,6 +27,8 @@ const InputPrimaryBase: ForwardRefRenderFunction<HTMLInputElement, InputPrimaryP
     isLoading,
     leftComponent,
     rightComponent,
+    iconRight,
+    iconLeft,
     ...rest
   },
   ref
@@ -37,12 +39,15 @@ const InputPrimaryBase: ForwardRefRenderFunction<HTMLInputElement, InputPrimaryP
       {
         <InLineInput>
           {leftComponent}
+          {iconLeft && <LeftIcon>{iconLeft}</LeftIcon>}
           <Input
             ref={ref}
             styleInput={styleInput}
             error={errorMessage}
+            iconLeft={iconLeft}
             {...rest}
           />
+          {iconRight && <RightIcon>{iconRight}</RightIcon>}
           {rightComponent}
         </InLineInput>
       }

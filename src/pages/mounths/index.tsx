@@ -1,12 +1,9 @@
 import getTokenId from "../../utils/getTokenID";
-import DefaultAside from "../../components/Asides/DefaultAside";
-import DefaultFooter from "../../components/Footers/DefaultFooter";
-import DefaultHeader from "../../components/Headers/DefaultHeader";
 import MaterialTablesData from "../../components/Tables/MaterialTablesData";
-import GridLayout from "../../containers/GridLayout";
+import GridLayout from "../../containers/Layouts/DefaultGridLayout";
+import Head from "next/head";
 
 import { getAPIClient } from "../../services/axios";
-import { GlobalSection } from "../../styles/Global";
 import { ContainerTable } from "../../styles/pageStyles/clientes/styles";
 import { withSSRAuth } from "../../utils/withSSRAuth";
 import { GetServerSideProps } from "next";
@@ -17,21 +14,21 @@ import { TotalMoneyInputStyle } from "../../styles/pageStyles/mounths/styles";
 import { api } from "../../services/api";
 import { useQuery } from "react-query";
 
-interface IMounthsProps{
+interface IMounthsProps {
   resMounths: [{}],
   totalMoneyMounth: string,
   userId: string,
 }
 
-export default function Mounths({resMounths, totalMoneyMounth, userId}: IMounthsProps) {
+export default function Mounths({ resMounths, totalMoneyMounth, userId }: IMounthsProps) {
 
   async function loadMounths() {
-    const { data } = await api.get(`/mounth/${userId}`);  
+    const { data } = await api.get(`/mounth/${userId}`);
     const mounths = data?.map(mounth => {
-      return{
+      return {
         _id: mounth._id,
         mounthName: firstLetter(mounth.mounthName),
-        billing: mounth.billing.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}),
+        billing: mounth.billing.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }),
         money: mounth.billing,
         year: mounth.year,
       }
@@ -39,43 +36,41 @@ export default function Mounths({resMounths, totalMoneyMounth, userId}: IMounths
     return mounths
   }
 
-  const { data: mounths } = useQuery("mounths", loadMounths, {initialData: resMounths});
+  const { data: mounths } = useQuery("mounths", loadMounths, { initialData: resMounths });
 
-  return(
-  <GridLayout>
-    <DefaultHeader title="Faturamento por mês" />
+  return (
+    <>
+      <Head>
+        <title>Faturamento por mês | Customer Controll</title>
+      </Head>
 
-    <GlobalSection className="section">
-      <ContainerTable>
+      <GridLayout headerTitle="Faturamento por mês">
+        <ContainerTable>
 
-        <MaterialTablesData 
-          title="Meses"
-          columns={[        
-            { title: 'Mês', field: 'mounthName', filtering: false },
-            { title: 'Faturamento', field: 'billing', filtering: false},
-            { title: 'Ano', field: 'year' },
-          ]}
-          options={{filtering: true}}
-          actions={[]}
-          data={mounths}
+          <MaterialTablesData
+            title="Meses"
+            columns={[
+              { title: 'Mês', field: 'mounthName', filtering: false },
+              { title: 'Faturamento', field: 'billing', filtering: false },
+              { title: 'Ano', field: 'year' },
+            ]}
+            options={{ filtering: true }}
+            actions={[]}
+            data={mounths}
+          />
+
+        </ContainerTable>
+
+        <InputPrimary
+          titleInput="Faturamento Total"
+          id="totalMoneyMounth"
+          styleContainer={{ maxWidth: '10rem', marginTop: '15px' }}
+          styleInput={TotalMoneyInputStyle}
+          value={totalMoneyMounth}
+          disabled
         />
-
-      </ContainerTable>
-      
-      <InputPrimary 
-        titleInput="Faturamento Total"
-        id="totalMoneyMounth"
-        styleContainer={{maxWidth: '10rem', marginTop: '15px'}}
-        styleInput={TotalMoneyInputStyle}
-        value={totalMoneyMounth}
-        disabled
-      />
-
-    </GlobalSection>
-
-    <DefaultAside />
-    <DefaultFooter />
-  </GridLayout>
+      </GridLayout>
+    </>
   )
 }
 
@@ -85,17 +80,17 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
     const api = getAPIClient(context);
     const { data } = await api.get(`/mounth/${userId}`)
 
-    if(!data) {
-      return{
-        props:{}
+    if (!data) {
+      return {
+        props: {}
       }
     }
 
     const mounths = data?.map(mounth => {
-      return{
+      return {
         _id: mounth._id,
         mounthName: firstLetter(mounth.mounthName),
-        billing: mounth.billing.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}),
+        billing: mounth.billing.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }),
         money: mounth.billing,
         year: mounth.year,
       }
@@ -103,8 +98,8 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
 
     const totalMoneyMounth = sumeMoney(mounths)
 
-    return{
-      props:{
+    return {
+      props: {
         resMounths: mounths,
         totalMoneyMounth,
         userId,

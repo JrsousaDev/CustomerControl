@@ -1,5 +1,12 @@
-import styled, { css } from 'styled-components';
-import { ContainerProps, InputProps } from './IInputSearch';
+import styled, { css, CSSProp } from 'styled-components';
+
+interface InputProps {
+  styleInput: CSSProp;
+}
+
+interface ContainerProps {
+  styleContainer: CSSProp;
+}
 
 export const Container = styled.div<ContainerProps>`
   width: 100%;

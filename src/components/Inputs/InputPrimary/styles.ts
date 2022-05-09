@@ -8,6 +8,7 @@ interface ContainerProps {
 interface InputProps {
   styleInput: CSSProp;
   error: boolean;
+  iconLeft?: boolean;
 }
 
 export const Container = styled.div<ContainerProps>`
@@ -25,6 +26,7 @@ export const Container = styled.div<ContainerProps>`
 
 
 export const InLineInput = styled.div`
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -34,7 +36,7 @@ export const InLineInput = styled.div`
 export const Input = styled.input<InputProps>`
   border: none;
   border-bottom: 2px solid #ADADAD;
-  padding: 0.4rem 0.2rem;
+  padding: ${props => props.iconLeft ? '0.4rem 2rem' : '0.4rem 0.2rem'};
   width: 100%;
   ${props => props.styleInput};
 
@@ -48,3 +50,15 @@ export const Title = styled.h6`
   font-size: 0.9rem;
   margin-bottom: 8px;
 `;
+
+export const RightIcon = styled.div`
+  position: absolute;
+  padding: 2px;
+  right: 3px;
+`
+
+export const LeftIcon = styled.div`
+  position: absolute;
+  padding: 2px;
+  left: 3px;
+`

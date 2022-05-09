@@ -32,6 +32,9 @@ export default function DefaultAside({}: IAsideProps){
         <RedirectLinksAside href="/mounths">
           Faturamento/Mês
         </RedirectLinksAside>
+        <RedirectLinksAside href="/todolist">
+          Lista de Tarefas
+        </RedirectLinksAside>
       </AsideBody>
 
     </ContainerAll>

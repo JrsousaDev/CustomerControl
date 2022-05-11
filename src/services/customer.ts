@@ -2,15 +2,14 @@ import { CREATE_CUSTOMER, DELETE_CUSTOMER, PAYMENT_SUCCESS_CUSTOMER, UPDATE_DUED
 import { api } from "./api";
 
 interface IUpdateDueDate {
-  userId: string;
   customerId: string;
   dueDate: Date;
 }
 
-export async function updateDueDateCustomer({ userId, customerId, dueDate }: IUpdateDueDate) {
-  const data = { userId, customerId, dueDate };
+export async function updateDueDateCustomer({ customerId, dueDate }: IUpdateDueDate) {
+  const data = { customerId, dueDate };
   try {
-    const response = await api.post(UPDATE_DUEDATE_CUSTOMER, data);
+    const response = await api.patch(UPDATE_DUEDATE_CUSTOMER, data);
     return response.data
   } catch (error) {
     if (error.response){
@@ -20,7 +19,6 @@ export async function updateDueDateCustomer({ userId, customerId, dueDate }: IUp
 }
 
 interface ICreateCustomer {
-  userId: string;
   name: string;
   responsibleName: string;
   email: string;
@@ -32,7 +30,6 @@ interface ICreateCustomer {
 }
 
 export async function createCustomer({ 
-  userId,
   name,
   responsibleName,
   email,
@@ -42,7 +39,7 @@ export async function createCustomer({
   paymentMethod,
   serviceStart,
 }: ICreateCustomer) {
-  const data = { userId, name, responsibleName, email, phone, value, dueDate, paymentMethod, serviceStart };
+  const data = { name, responsibleName, email, phone, value, dueDate, paymentMethod, serviceStart };
   try {
     const response = await api.post(CREATE_CUSTOMER, data);
     return response.data
@@ -54,12 +51,11 @@ export async function createCustomer({
 }
 
 interface IDeleteCustomer {
-  userId: string;
   customerId: string;
 }
 
-export async function deleteCustomer({userId, customerId}: IDeleteCustomer) {
-  const data = {userId, customerId}
+export async function deleteCustomer({customerId}: IDeleteCustomer) {
+  const data = {customerId}
 
   try {
     const response = await api.delete(DELETE_CUSTOMER, {data});
@@ -72,15 +68,14 @@ export async function deleteCustomer({userId, customerId}: IDeleteCustomer) {
 }
 
 interface IPaymentSuccess {
-  userId: string;
   customerId: string;
 }
 
-export async function paymentSuccess({userId, customerId}: IPaymentSuccess) {
-  const data = { userId, customerId };
+export async function paymentSuccess({customerId}: IPaymentSuccess) {
+  const data = { customerId };
 
   try {
-    const response = await api.post(PAYMENT_SUCCESS_CUSTOMER, data);
+    const response = await api.patch(PAYMENT_SUCCESS_CUSTOMER, data);
     return response.data
   } catch (error) {
     if (error.response){

@@ -1,7 +1,5 @@
 import { GetServerSideProps } from "next";
-import { GlobalSection } from "../../styles/Global";
 import { useState } from "react";
-import { getUserInID } from "../../services/user";
 import { BsCalendar2CheckFill } from "react-icons/bs";
 import { withSSRAuth } from "../../utils/withSSRAuth";
 import { useQuery } from "react-query";
@@ -10,6 +8,7 @@ import { deleteCustomer, paymentSuccess } from "../../services/customer";
 import { toast } from "react-toastify";
 import { AiFillDelete } from "react-icons/ai";
 import { mounthsMaterialTable } from "../../constants/mounths";
+import { getUser } from "../../services/user";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import {
   ContainerTable,
@@ -21,29 +20,27 @@ import MaterialTablesData from "../../components/Tables/MaterialTablesData";
 import DefaultGridLayout from "../../containers/Layouts/DefaultGridLayout";
 import moment from 'moment';
 import ModalUpdateDueDate from "../../components/Modals/ModalUpdateDueDate";
-import getTokenId from "../../utils/getTokenID";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import Head from "next/head";
 
-export default function Customers({ resCustomers, userId }) {
+async function loadCustomers() {
+  const user = await getUser({});
 
-  async function loadCustomers() {
-    const user = await getUserInID({ userId });
+  const customers = await user.listCustomers?.map((list) => {
+    return {
+      _id: list.customerId?._id || null,
+      name: list.customerId?.name || null,
+      dueDate: list.customerId?.contract.dueDate,
+      dueDateFormat: moment(list.customerId?.contract.dueDate).format('DD/MM/YYYY') || null,
+      mounthFormat: moment(list.customerId?.contract.dueDate).format('MM/YYYY'),
+      value: list.customerId?.contract.value.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }) || null,
+    }
+  });
 
-    const customers = await user.listCustomers?.map((list) => {
-      return {
-        _id: list.customerId?._id || null,
-        name: list.customerId?.name || null,
-        dueDate: list.customerId?.contract.dueDate,
-        dueDateFormat: moment(list.customerId?.contract.dueDate).format('DD/MM/YYYY') || null,
-        mounthFormat: moment(list.customerId?.contract.dueDate).format('MM/YYYY'),
-        value: list.customerId?.contract.value.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }) || null,
-      }
-    });
+  return customers
+}
 
-    return customers
-  }
-
+export default function Customers({ resCustomers }) {
   const { data: customers, refetch } = useQuery("checkins", loadCustomers, { initialData: resCustomers });
   const [openModalUpdateDueDate, setOpenModalUpdateDueDate] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState();
@@ -55,9 +52,9 @@ export default function Customers({ resCustomers, userId }) {
     setSelectedCustomer(customer);
   }
 
-  const handleDeleteCustomer = async ({ userId, customerId }) => {
+  const handleDeleteCustomer = async ({ customerId }) => {
     try {
-      await deleteCustomer({ userId, customerId });
+      await deleteCustomer({ customerId });
       toast.success('Cliente deletado');
       refetch();
     } catch (error) {
@@ -65,9 +62,9 @@ export default function Customers({ resCustomers, userId }) {
     }
   }
 
-  const handleSuccessPayment = async ({ userId, customerId }) => {
+  const handleSuccessPayment = async ({ customerId }) => {
     try {
-      await paymentSuccess({ userId, customerId });
+      await paymentSuccess({ customerId });
       toast.success('Pagamento recebido!');
       refetch();
     } catch (error) {
@@ -84,7 +81,6 @@ export default function Customers({ resCustomers, userId }) {
 
       <ModalUpdateDueDate
         refetchCustomer={refetch}
-        userId={userId}
         customer={selectedCustomer}
         openModal={openModalUpdateDueDate}
         setOpenModal={setOpenModalUpdateDueDate}
@@ -127,7 +123,7 @@ export default function Customers({ resCustomers, userId }) {
                 tooltip: 'Excluir cliente',
                 onClick: (event, rowData) => {
                   const res = confirm('Você tem certeza que deseja excluir o cliente: ' + rowData.name);
-                  if (res) handleDeleteCustomer({ userId, customerId: rowData._id });
+                  if (res) handleDeleteCustomer({ customerId: rowData._id });
                 }
               },
               {
@@ -135,7 +131,7 @@ export default function Customers({ resCustomers, userId }) {
                 tooltip: 'Pagamento Efetuado',
                 onClick: (event, rowData) => {
                   const res = confirm('Você confirma o recebimento de: ' + rowData.name);
-                  if (res) handleSuccessPayment({ userId, customerId: rowData._id });
+                  if (res) handleSuccessPayment({ customerId: rowData._id });
                 }
               }
             ]}
@@ -148,10 +144,8 @@ export default function Customers({ resCustomers, userId }) {
 }
 
 export const getServerSideProps: GetServerSideProps = withSSRAuth(
-  async (context) => {
-    const userId = await getTokenId(context, 'customerControl.token');
-    const api = getAPIClient(context)
-    const { data: user } = await api.post("/user/findone", { userId });
+  async (ctx) => {
+    const user = await getUser({ctx});
 
     if (!user) {
       return {
@@ -174,7 +168,6 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
       return {
         props: {
           resCustomers: customers || null,
-          userId: userId || null,
         }
       }
     }

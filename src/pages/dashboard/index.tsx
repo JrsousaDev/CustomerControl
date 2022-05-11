@@ -2,35 +2,29 @@ import DefaultDashboard from "../../components/Dashboards/DefaultDashboard";
 import DefaultGridLayout from "../../containers/Layouts/DefaultGridLayout";
 import GiveMoneyIcon from "/public/assets/giveMoney.svg";
 import CustomersIcon from "/public/assets/customers.svg";
-import getTokenId from "../../utils/getTokenID";
 
 import { ContainerSplitDashboard } from "../../styles/pageStyles/dashboard/styles";
 import { GetServerSideProps } from "next";
 import { withSSRAuth } from "../../utils/withSSRAuth";
-import { getAPIClient } from "../../services/axios";
 import { sumeMoney } from "../../utils/sumeMoney";
 import { useQuery } from "react-query";
-import { getUserInID } from "../../services/user";
+import { getUser } from "../../services/user";
 import Head from "next/head";
 
 interface IDashboardProps {
   resCustomers: any,
   resMoney: string,
-  userId: string,
 }
 
-export default function Dashboard({ resCustomers, resMoney, userId }: IDashboardProps) {
+async function loadCustomers() {
+  const user = await getUser({});
+  const customers = await user.listCustomers?.map((list) => {
+    return {money: list.customerId.contract.value}
+  });
+  return customers
+} 
 
-  async function loadCustomers() {
-    const user = await getUserInID({ userId });
-    const customers = await user.listCustomers?.map((list) => {
-      return {
-        money: list.customerId.contract.value
-      }
-    });
-    return customers
-  }
-
+export default function Dashboard({ resCustomers, resMoney }: IDashboardProps) {
   const { data: customers } = useQuery("customers", loadCustomers, { initialData: resCustomers });
 
   return (
@@ -59,10 +53,8 @@ export default function Dashboard({ resCustomers, resMoney, userId }: IDashboard
 }
 
 export const getServerSideProps: GetServerSideProps = withSSRAuth(
-  async (context) => {
-    const userId = await getTokenId(context, 'customerControl.token');
-    const api = getAPIClient(context)
-    const { data: user } = await api.post("/user/findone", { userId });
+  async (ctx) => {
+    const user = await getUser({ctx})
 
     if (!user) {
       return {
@@ -83,7 +75,6 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
         props: {
           resCustomers: customers || null,
           resMoney: totalMoney || null,
-          userId,
         }
       }
     }

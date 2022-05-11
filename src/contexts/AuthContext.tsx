@@ -54,6 +54,9 @@ export function AuthProvider( {children}: AuthProviderProps ) {
         }
 
         setUser(objectUser);
+      } else {
+        destroyAllCookies();
+        Router.push("/");
       }
     }
 

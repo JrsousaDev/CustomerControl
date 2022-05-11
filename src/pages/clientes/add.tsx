@@ -1,6 +1,5 @@
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import DefaultGridLayout from "../../containers/Layouts/DefaultGridLayout";
-import getTokenId from "../../utils/getTokenID";
 import InputMask from 'react-input-mask';
 import CurrencyInput from 'react-currency-masked-input';
 import moment from "moment";
@@ -37,11 +36,7 @@ const createCustomerFormSchema = yup.object().shape({
   serviceStart: yup.string().required("Informe a data de início"),
 });
 
-interface ICustomersAddProps {
-  userId: string;
-}
-
-export default function CustomersAdd({ userId }: ICustomersAddProps) {
+export default function CustomersAdd() {
   const currentDate = moment().format('YYYY-MM-DD');
   const [loading, setLoading] = useState(false);
 
@@ -56,8 +51,7 @@ export default function CustomersAdd({ userId }: ICustomersAddProps) {
   const { errors } = formState;
 
   const handleCreateCustomer = async (data) => {
-    setLoading(true)
-    data.userId = userId;
+    setLoading(true);
 
     try {
       await createCustomer(data);
@@ -217,12 +211,9 @@ export default function CustomersAdd({ userId }: ICustomersAddProps) {
 
 export const getServerSideProps: GetServerSideProps = withSSRAuth(
   async (context) => {
-    const userId = await getTokenId(context, 'customerControl.token');
 
     return {
-      props: {
-        userId: String(userId),
-      }
+      props: {}
     }
   }
 )

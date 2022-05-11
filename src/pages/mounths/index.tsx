@@ -1,9 +1,7 @@
-import getTokenId from "../../utils/getTokenID";
 import MaterialTablesData from "../../components/Tables/MaterialTablesData";
 import GridLayout from "../../containers/Layouts/DefaultGridLayout";
 import Head from "next/head";
 
-import { getAPIClient } from "../../services/axios";
 import { ContainerTable } from "../../styles/pageStyles/clientes/styles";
 import { withSSRAuth } from "../../utils/withSSRAuth";
 import { GetServerSideProps } from "next";
@@ -11,31 +9,30 @@ import { firstLetter } from "../../utils/firstLetter";
 import { sumeMoney } from "../../utils/sumeMoney";
 import { InputPrimary } from "../../components/Inputs/InputPrimary";
 import { TotalMoneyInputStyle } from "../../styles/pageStyles/mounths/styles";
-import { api } from "../../services/api";
 import { useQuery } from "react-query";
+import { getMounths } from "../../services/mounth";
 
 interface IMounthsProps {
   resMounths: [{}],
   totalMoneyMounth: string,
-  userId: string,
 }
 
-export default function Mounths({ resMounths, totalMoneyMounth, userId }: IMounthsProps) {
+async function loadMounths() {
+  const data = await getMounths({})
+  const mounths = data?.map(mounth => {
+    return {
+      _id: mounth._id,
+      mounthName: firstLetter(mounth.mounthName),
+      billing: mounth.billing.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }),
+      money: mounth.billing,
+      year: mounth.year,
+    }
+  });
 
-  async function loadMounths() {
-    const { data } = await api.get(`/mounth/${userId}`);
-    const mounths = data?.map(mounth => {
-      return {
-        _id: mounth._id,
-        mounthName: firstLetter(mounth.mounthName),
-        billing: mounth.billing.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }),
-        money: mounth.billing,
-        year: mounth.year,
-      }
-    });
-    return mounths
-  }
+  return mounths
+}
 
+export default function Mounths({ resMounths, totalMoneyMounth }: IMounthsProps) {
   const { data: mounths } = useQuery("mounths", loadMounths, { initialData: resMounths });
 
   return (
@@ -75,10 +72,8 @@ export default function Mounths({ resMounths, totalMoneyMounth, userId }: IMount
 }
 
 export const getServerSideProps: GetServerSideProps = withSSRAuth(
-  async (context) => {
-    const userId = await getTokenId(context, 'customerControl.token');
-    const api = getAPIClient(context);
-    const { data } = await api.get(`/mounth/${userId}`)
+  async (ctx) => {
+    const data = await getMounths({ctx});
 
     if (!data) {
       return {
@@ -96,13 +91,14 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
       }
     });
 
+    console.log(mounths)
+
     const totalMoneyMounth = sumeMoney(mounths)
 
     return {
       props: {
         resMounths: mounths,
         totalMoneyMounth,
-        userId,
       }
     }
   }

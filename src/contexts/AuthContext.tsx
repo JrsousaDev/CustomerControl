@@ -8,7 +8,7 @@ import {
 
 import { api } from "../services/api";
 import { parseCookies, setCookie } from "nookies";
-import { createAuthenticationUser, getUserInID } from "../services/user";
+import { createAuthenticationUser, getUser } from "../services/user";
 
 import Router from "next/router";
 import destroyAllCookies from "../utils/destroyAllCookies";
@@ -17,10 +17,6 @@ import jwtDecode from "jwt-decode";
 interface SignInData {
   email: string;
   password: string;
-}
-
-interface ITokenDecoded {
-  _id: string;
 }
 
 type AuthContextData = {
@@ -43,9 +39,7 @@ export function AuthProvider( {children}: AuthProviderProps ) {
 
     async function onGetUserFunction() {
       if (token) {
-        const tokenDecoded: ITokenDecoded = await jwtDecode(token);
-        const id = tokenDecoded?._id;
-        const user = await getUserInID({userId: id});
+        const user = await getUser({});
 
         let objectUser = {
           _id: user._id,

@@ -13,21 +13,20 @@ import {
 import moment from "moment";
 
 interface IModalUpdateDueDateProps {
-  userId: string;
   customer: any;
   openModal: boolean;
   setOpenModal: (parameter) => void;
   refetchCustomer: () => void;
 }
 
-export default function ModalUpdateDueDate({openModal, setOpenModal, customer, userId, refetchCustomer}: IModalUpdateDueDateProps) {
+export default function ModalUpdateDueDate({openModal, setOpenModal, customer, refetchCustomer}: IModalUpdateDueDateProps) {
   const [ dueDate, setDueDate ] = useState<any>();
 
   const currentDate = moment(new Date()).format('YYYY-MM-DD');
  
   const updateDueDateResponse = async () => {
     try {
-      await updateDueDateCustomer({userId, customerId: customer._id, dueDate});
+      await updateDueDateCustomer({customerId: customer._id, dueDate});
       toast.success('Data de vencimento atualizada com sucesso!');
       refetchCustomer();
       hiddenModal();

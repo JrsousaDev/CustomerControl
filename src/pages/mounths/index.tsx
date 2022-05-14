@@ -71,7 +71,7 @@ export default function Mounths({ resMounths, totalMoneyMounth }: IMounthsProps)
   )
 }
 
-export const getServerSideProps: GetServerSideProps = withSSRAuth(
+export const getServerSideProps = withSSRAuth(
   async (ctx) => {
     const data = await getMounths({ctx});
 

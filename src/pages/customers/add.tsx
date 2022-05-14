@@ -68,7 +68,7 @@ export default function CustomersAdd() {
   return (
     <>
       <Head>
-        <title>Login | Customer Controll</title>
+        <title>Adicionar | Customer Controll</title>
       </Head>
 
       <DefaultGridLayout headerTitle="Lista de Clientes">

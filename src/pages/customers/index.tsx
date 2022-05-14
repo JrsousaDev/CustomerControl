@@ -142,9 +142,11 @@ export default function Customers({ resCustomers }) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = withSSRAuth(
+export const getServerSideProps = withSSRAuth(
   async (ctx) => {
     const user = await getUser({ctx});
+
+    console.log(user)
 
     if (!user) {
       return {

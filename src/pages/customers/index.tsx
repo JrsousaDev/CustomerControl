@@ -1,4 +1,3 @@
-import { GetServerSideProps } from "next";
 import { useState } from "react";
 import { BsCalendar2CheckFill } from "react-icons/bs";
 import { useQuery } from "react-query";
@@ -8,6 +7,7 @@ import { AiFillDelete } from "react-icons/ai";
 import { mounthsMaterialTable } from "../../constants/mounths";
 import { getUser } from "../../services/user";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
+import { withSSRAuth } from "../../utils/authAndPermissions/withSSRAuth";
 import {
   ContainerTable,
   StatusAttentionTable,
@@ -20,7 +20,6 @@ import moment from 'moment';
 import ModalUpdateDueDate from "../../components/Modals/ModalUpdateDueDate";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import Head from "next/head";
-import { withSSRAuth } from "../../utils/authAndPermissions/withSSRAuth";
 
 async function loadCustomers() {
   const user = await getUser({});
@@ -89,7 +88,7 @@ export default function Customers({ resCustomers }) {
         <ButtonPrimary
           textButton="Adicionar Cliente"
           styleContainer={{ marginBottom: '10px' }}
-          url="/clientes/add"
+          url="/customers/add"
         />
 
         <ContainerTable>

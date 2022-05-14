@@ -52,7 +52,7 @@ export function withSSRAuth<P>(fn: GetServerSideProps<P>, options?: WithSSRAuthO
       return await fn(context)
     } catch (err) {
       if (err instanceof AuthTokenError) {
-        destroyAllCookies();
+        destroyAllCookies(context);
 
         return {
           redirect: {

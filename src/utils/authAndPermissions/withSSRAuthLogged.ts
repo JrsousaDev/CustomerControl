@@ -27,7 +27,7 @@ export function withSSRAuthLogged<P>(fn: GetServerSideProps<P>/* , options?: Wit
       return await fn(context)
     } catch (err) {
       if (err instanceof AuthTokenError) {
-        destroyAllCookies();
+        destroyAllCookies(context);
 
         return {
           redirect: {

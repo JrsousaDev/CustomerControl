@@ -38,26 +38,47 @@ type AuthProviderProps = {
 
 export const AuthContext = createContext({} as AuthContextData);
 
-export function signOut() {
+let authChannel: BroadcastChannel;
+
+export function signOut(broadcast: boolean = true) {
   destroyAllCookies();
+
+  if(broadcast) {
+    authChannel.postMessage('signOut');
+  }
+
   Router.push("/");
 }
 
-export function AuthProvider({ children }: AuthProviderProps ) {
-  const [ user, setUser ] = useState<User>();
+export function AuthProvider({ children }: AuthProviderProps) {
+  const [user, setUser] = useState<User>();
   const isAuthenticated = !!user;
+
+  useEffect(() => {
+    authChannel = new BroadcastChannel('auth');
+
+    authChannel.onmessage = (message) => {
+      switch (message.data) {
+        case 'signOut':
+          signOut(false);
+          break;
+        default:
+          break;
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const { "customerControl.token": token } = parseCookies();
 
-    async function onGetUserFunction() {
+    (async () => {
       if (token) {
         await getUser({}).then(user => {
           const { roles, confidential, _id, permissions } = user;
 
           setUser({
             _id,
-            email: confidential.email, 
+            email: confidential.email,
             permissions,
             roles: roles,
           });
@@ -65,26 +86,23 @@ export function AuthProvider({ children }: AuthProviderProps ) {
         }).catch(() => {
           signOut();
         });
-      } else {
-        signOut();
-      }
-    }
+      } 
+    })()
 
-    onGetUserFunction();
   }, []);
 
   const signIn = async ({ email, password }) => {
     try {
       const user = await createAuthenticationUser({ email, password });
-      
+
       const { _id, authorization: token, permissions, roles } = user;
 
-      if (!token || !user){ 
+      if (!token || !user) {
         throw "E-mail ou senha incorreta!";
       }
 
       setCookie(undefined, "customerControl.token", token, {
-        maxAge: 60 * 1, // 30 days
+        maxAge: 60 * 60 * 24 * 30, // 30 days
         path: "/",
       });
 
@@ -101,7 +119,7 @@ export function AuthProvider({ children }: AuthProviderProps ) {
     }
   }
 
-  return(
+  return (
     <AuthContext.Provider
       value={{
         signIn,

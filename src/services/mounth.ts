@@ -1,6 +1,6 @@
 import { GET_MOUNTHS } from "../constants/routes";
-import { api } from "./api";
-import { getAPIClient } from "./axios";
+import { setupAPIClient } from "./api";
+import { api } from "./apiClient";
 
 interface GetMounths {
   ctx?: any
@@ -8,7 +8,7 @@ interface GetMounths {
 
 export async function getMounths({ ctx }: GetMounths) {
   if(ctx) {
-    const api = getAPIClient(ctx);
+    const api = setupAPIClient(ctx);
 
     try {
       const response = await api.get(GET_MOUNTHS);

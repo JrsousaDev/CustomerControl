@@ -1,9 +1,7 @@
 import { GetServerSideProps } from "next";
 import { useState } from "react";
 import { BsCalendar2CheckFill } from "react-icons/bs";
-import { withSSRAuth } from "../../utils/withSSRAuth";
 import { useQuery } from "react-query";
-import { getAPIClient } from "../../services/axios";
 import { deleteCustomer, paymentSuccess } from "../../services/customer";
 import { toast } from "react-toastify";
 import { AiFillDelete } from "react-icons/ai";
@@ -22,6 +20,7 @@ import moment from 'moment';
 import ModalUpdateDueDate from "../../components/Modals/ModalUpdateDueDate";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import Head from "next/head";
+import { withSSRAuth } from "../../utils/authAndPermissions/withSSRAuth";
 
 async function loadCustomers() {
   const user = await getUser({});
@@ -171,9 +170,12 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
         }
       }
     }
+
     return {
       props: {}
     }
+  },{
+    roles: ['ADMIN'],
   }
 )
 

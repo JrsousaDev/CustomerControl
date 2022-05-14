@@ -1,5 +1,5 @@
 import { CREATE_CUSTOMER, DELETE_CUSTOMER, PAYMENT_SUCCESS_CUSTOMER, UPDATE_DUEDATE_CUSTOMER } from "../constants/routes";
-import { api } from "./api";
+import { api } from "./apiClient";
 
 interface IUpdateDueDate {
   customerId: string;

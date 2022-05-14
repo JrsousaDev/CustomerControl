@@ -2,14 +2,15 @@ import DefaultDashboard from "../../components/Dashboards/DefaultDashboard";
 import DefaultGridLayout from "../../containers/Layouts/DefaultGridLayout";
 import GiveMoneyIcon from "/public/assets/giveMoney.svg";
 import CustomersIcon from "/public/assets/customers.svg";
+import Head from "next/head";
 
 import { ContainerSplitDashboard } from "../../styles/pageStyles/dashboard/styles";
 import { GetServerSideProps } from "next";
-import { withSSRAuth } from "../../utils/withSSRAuth";
 import { sumeMoney } from "../../utils/sumeMoney";
 import { useQuery } from "react-query";
 import { getUser } from "../../services/user";
-import Head from "next/head";
+import { withSSRAuth } from "../../utils/authAndPermissions/withSSRAuth";
+import { CanAccess } from "../../components/CanAccess";
 
 interface IDashboardProps {
   resCustomers: any,
@@ -34,10 +35,14 @@ export default function Dashboard({ resCustomers, resMoney }: IDashboardProps) {
       </Head>
 
       <DefaultGridLayout headerTitle="Dashboard">
+
         <ContainerSplitDashboard>
-          <DefaultDashboard title="Soma de contratos" values={resMoney} bgColor="#0C9600">
-            <GiveMoneyIcon />
-          </DefaultDashboard>
+
+          <CanAccess roles={['ADMIN']}>
+            <DefaultDashboard title="Soma de contratos" values={resMoney} bgColor="#0C9600">
+              <GiveMoneyIcon />
+            </DefaultDashboard>
+          </CanAccess>
 
           <DefaultDashboard title="Quant. de clientes" values={customers?.length || '0'} bgColor="#272826">
             <CustomersIcon />
@@ -54,7 +59,7 @@ export default function Dashboard({ resCustomers, resMoney }: IDashboardProps) {
 
 export const getServerSideProps: GetServerSideProps = withSSRAuth(
   async (ctx) => {
-    const user = await getUser({ctx})
+    const user = await getUser({ctx});
 
     if (!user) {
       return {

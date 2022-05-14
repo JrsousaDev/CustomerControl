@@ -18,12 +18,11 @@ import {
 } from "../../styles/pageStyles/clientes/add";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { withSSRAuth } from "../../utils/withSSRAuth";
-import { GetServerSideProps } from "next";
 import { createCustomer } from "../../services/customer";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import Head from "next/head";
+import { withSSRAuth } from "../../utils/authAndPermissions/withSSRAuth";
 
 const createCustomerFormSchema = yup.object().shape({
   name: yup.string().required("Digite o nome da empresa"),
@@ -209,11 +208,13 @@ export default function CustomersAdd() {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = withSSRAuth(
+export const getServerSideProps = withSSRAuth(
   async (context) => {
 
     return {
       props: {}
     }
+  },{
+    roles: ['ADMIN'],
   }
 )

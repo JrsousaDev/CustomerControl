@@ -6,23 +6,30 @@ import {
   useState,
 } from "react";
 
-import { api } from "../services/api";
 import { parseCookies, setCookie } from "nookies";
 import { createAuthenticationUser, getUser } from "../services/user";
+import { api } from "../services/apiClient";
 
 import Router from "next/router";
 import destroyAllCookies from "../utils/destroyAllCookies";
-import jwtDecode from "jwt-decode";
 
-interface SignInData {
+type User = {
+  _id: string;
+  email: string;
+  permissions: string[];
+  roles: string[];
+}
+
+type SignInCredentials = {
   email: string;
   password: string;
 }
 
 type AuthContextData = {
-  signIn: (data: SignInData) => Promise<void>,
+  signIn: (data: SignInCredentials) => Promise<void>,
   signOut: () => void,
-  user?: any,
+  user: User,
+  isAuthenticated: boolean,
 };
 
 type AuthProviderProps = {
@@ -31,26 +38,35 @@ type AuthProviderProps = {
 
 export const AuthContext = createContext({} as AuthContextData);
 
-export function AuthProvider( {children}: AuthProviderProps ) {
-  const [ user, setUser ] = useState<any>();
+export function signOut() {
+  destroyAllCookies();
+  Router.push("/");
+}
+
+export function AuthProvider({ children }: AuthProviderProps ) {
+  const [ user, setUser ] = useState<User>();
+  const isAuthenticated = !!user;
 
   useEffect(() => {
     const { "customerControl.token": token } = parseCookies();
 
     async function onGetUserFunction() {
       if (token) {
-        const user = await getUser({});
+        await getUser({}).then(user => {
+          const { roles, confidential, _id, permissions } = user;
 
-        let objectUser = {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-        }
+          setUser({
+            _id,
+            email: confidential.email, 
+            permissions,
+            roles: roles,
+          });
 
-        setUser(objectUser);
+        }).catch(() => {
+          signOut();
+        });
       } else {
-        destroyAllCookies();
-        Router.push("/");
+        signOut();
       }
     }
 
@@ -60,32 +76,29 @@ export function AuthProvider( {children}: AuthProviderProps ) {
   const signIn = async ({ email, password }) => {
     try {
       const user = await createAuthenticationUser({ email, password });
-      const token = user.authorization;
-      const objectUser = {
-        _id: user._id,
-        name: user.name,
-        email: user.email
+      
+      const { _id, authorization: token, permissions, roles } = user;
+
+      if (!token || !user){ 
+        throw "E-mail ou senha incorreta!";
       }
 
-      if (!token || !objectUser) throw "E-mail ou senha incorreta!";
-
       setCookie(undefined, "customerControl.token", token, {
-        maxAge: 60 * 60 * 24 * 30, // 30 days
+        maxAge: 60 * 1, // 30 days
         path: "/",
       });
 
-      setUser(objectUser);
+      setUser({
+        _id,
+        email,
+        permissions,
+        roles
+      });
 
       api.defaults.headers["Authorization"] = `${token}`;
-
     } catch (error) {
       throw error
     }
-  }
-
-  async function signOut() {
-    destroyAllCookies();
-    Router.push("/");
   }
 
   return(
@@ -93,6 +106,7 @@ export function AuthProvider( {children}: AuthProviderProps ) {
       value={{
         signIn,
         signOut,
+        isAuthenticated,
         user
       }}
     >

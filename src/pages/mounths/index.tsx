@@ -3,7 +3,6 @@ import GridLayout from "../../containers/Layouts/DefaultGridLayout";
 import Head from "next/head";
 
 import { ContainerTable } from "../../styles/pageStyles/clientes/styles";
-import { withSSRAuth } from "../../utils/withSSRAuth";
 import { GetServerSideProps } from "next";
 import { firstLetter } from "../../utils/firstLetter";
 import { sumeMoney } from "../../utils/sumeMoney";
@@ -11,6 +10,7 @@ import { InputPrimary } from "../../components/Inputs/InputPrimary";
 import { TotalMoneyInputStyle } from "../../styles/pageStyles/mounths/styles";
 import { useQuery } from "react-query";
 import { getMounths } from "../../services/mounth";
+import { withSSRAuth } from "../../utils/authAndPermissions/withSSRAuth";
 
 interface IMounthsProps {
   resMounths: [{}],
@@ -91,8 +91,6 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
       }
     });
 
-    console.log(mounths)
-
     const totalMoneyMounth = sumeMoney(mounths)
 
     return {
@@ -101,5 +99,7 @@ export const getServerSideProps: GetServerSideProps = withSSRAuth(
         totalMoneyMounth,
       }
     }
+  },{
+    roles: ['ADMIN']
   }
 )

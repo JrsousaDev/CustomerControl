@@ -1,7 +1,5 @@
 import { useForm } from "react-hook-form";
 import { useAuth } from "../contexts/AuthContext";
-import { GetServerSideProps } from "next";
-import { withSSRAuthLogged } from "../utils/withSSRAuthLogged";
 import { toast } from "react-toastify";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
@@ -21,6 +19,7 @@ import * as yup from "yup";
 import Link from "next/link";
 import ButtonPrimary from "../components/Buttons/ButtonPrimary";
 import Head from "next/head";
+import { withSSRAuthLogged } from "../utils/authAndPermissions/withSSRAuthLogged";
 
 const signInFormSchema = yup.object().shape({
   email: yup.string().email('Digite um e-mail válido').required("Digite seu e-mail cadastrado"),
@@ -123,7 +122,7 @@ export default function Home() {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = withSSRAuthLogged(
+export const getServerSideProps = withSSRAuthLogged(
   async (context) => {
 
     return {

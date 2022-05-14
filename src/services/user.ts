@@ -1,6 +1,6 @@
 import { AUTH_USER, GET_USER } from "../constants/routes";
-import { api } from "./api";
-import { getAPIClient } from "./axios";
+import { setupAPIClient } from "./api";
+import { api } from "./apiClient";
 
 interface ICreateAuthenticateUser {
   email: string;
@@ -25,10 +25,10 @@ interface GetUser {
 
 export async function getUser({ ctx }: GetUser) {
   if(ctx) {
-    const api = getAPIClient(ctx);
+    const apiClient = setupAPIClient(ctx);
 
     try {
-      const response = await api.get(GET_USER);
+      const response = await apiClient.get(GET_USER);
       return response.data
     } catch (error) {
       if (error.response) {

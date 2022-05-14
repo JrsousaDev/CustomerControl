@@ -62,6 +62,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         case 'signOut':
           signOut(false);
           break;
+        case 'signIn':
+          Router.push('/dashboard')
         default:
           break;
       }
@@ -114,6 +116,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       });
 
       api.defaults.headers["Authorization"] = `${token}`;
+
+      authChannel.postMessage('signIn');
     } catch (error) {
       throw error
     }

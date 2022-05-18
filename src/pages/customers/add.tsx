@@ -29,7 +29,7 @@ const createCustomerFormSchema = yup.object().shape({
   responsibleName: yup.string().required("Digite o nome do responsável"),
   email: yup.string().email('Digite um e-mail válido').required("Digite um e-mail"),
   phone: yup.string().required("Digite o número de telefone"),
-  value: yup.string().required("Digite o valor do contrato"),
+  contractValue: yup.string().required("Digite o valor do contrato"),
   dueDate: yup.string().required("Informe a data de vencimento"),
   paymentMethod: yup.string().required("Informe o método de pagamento"),
   serviceStart: yup.string().required("Informe a data de início"),
@@ -43,27 +43,45 @@ export default function CustomersAdd() {
     register,
     handleSubmit,
     clearErrors,
-    formState
+    formState,
+    setValue,
   } = useForm({
     resolver: yupResolver(createCustomerFormSchema)
   });
   const { errors } = formState;
 
-  const handleCreateCustomer = async (data) => {
-    setLoading(true);
+  function ClearCreateCustomerFormInputs() {
+    setValue('name', '');
+    setValue('responsibleName', '');
+    setValue('email', '');
+    setValue('phone', '');
+    setValue('dueDate', '');
+    setValue('paymentMethod', '');
+    setValue('serviceStart', '');
+    setValue('contractValue', '0');
+  }
 
-    try {
-      await createCustomer(data);
-      toast.success('Cliente adicionado');
-    } catch (err) {
-      if (err) toast.error(err);
-      if (!err) toast.error('Internal server error');
-    } finally {
+  class CustomersActions {
+
+    async CreateCustomer(data) {
+      setLoading(true);
+
+      try {
+        await createCustomer(data);
+        toast.success('Cliente adicionado');
+      } catch (err) {
+        if (err) toast.error(err);
+        if (!err) toast.error('Internal server error');
+      } finally {
+        setLoading(false)
+        ClearCreateCustomerFormInputs();
+      }
+
       setLoading(false)
     }
 
-    setLoading(false)
   }
+  const customersActions = new CustomersActions();
 
   return (
     <>
@@ -130,16 +148,16 @@ export default function CustomersAdd() {
 
               <Division>
                 <InputPrimary
-                  id="value"
-                  name="value"
+                  id="contractValue"
+                  name="contractValue"
                   as={CurrencyInput}
                   titleInput="Valor do Contrato"
                   placeholder="R$"
                   styleContainer={ContainerStyle}
                   styleInput={InputStyle}
-                  errorMessage={errors?.value?.message}
-                  onClick={() => clearErrors("value")}
-                  {...register("value")}
+                  errorMessage={errors?.contractValue?.message}
+                  onClick={() => clearErrors("contractValue")}
+                  {...register("contractValue")}
                 />
                 <InputPrimary
                   type="date"
@@ -186,7 +204,7 @@ export default function CustomersAdd() {
               </Division>
 
               <ButtonPrimary
-                onClick={(handleSubmit(handleCreateCustomer))}
+                onClick={(handleSubmit(customersActions.CreateCustomer))}
                 textButton="Salvar cliente"
                 loading={loading}
                 styleContainer={{
@@ -214,7 +232,7 @@ export const getServerSideProps = withSSRAuth(
     return {
       props: {}
     }
-  },{
-    roles: ['ADMIN'],
-  }
+  }, {
+  roles: ['ADMIN'],
+}
 )

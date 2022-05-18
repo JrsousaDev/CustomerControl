@@ -1,32 +1,37 @@
+import { GetServerSidePropsContext } from "next";
 import { GET_MOUNTHS } from "../constants/routes";
 import { setupAPIClient } from "./api";
 import { api } from "./apiClient";
 
-interface GetMounths {
-  ctx?: any
+interface GetAllUserMonthsParameters {
+  context?: GetServerSidePropsContext;
 }
 
-export async function getMounths({ ctx }: GetMounths) {
-  if(ctx) {
-    const api = setupAPIClient(ctx);
+class ServicesMonths {
 
-    try {
-      const response = await api.get(GET_MOUNTHS);
-      return response.data
-    } catch (error) {
-      if (error.response) {
-        return error.response.data;
+  async GetAllUserMonths({ context }: GetAllUserMonthsParameters) {
+    if (context) {
+      const api = setupAPIClient(context);
+      try {
+        const response = await api.get(GET_MOUNTHS);
+        return response.data
+      } catch (error) {
+        if (error.response) {
+          return error.response.data;
+        }
       }
-    }
-
-  } else {
-    try {
-      const response = await api.get(GET_MOUNTHS);
-      return response.data
-    } catch (error) {
-      if (error.response) {
-        return error.response.data;
+    } else {
+      try {
+        const response = await api.get(GET_MOUNTHS);
+        return response.data
+      } catch (error) {
+        if (error.response) {
+          return error.response.data;
+        }
       }
     }
   }
+
 }
+
+export const servicesMonths = new ServicesMonths();

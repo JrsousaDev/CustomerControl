@@ -3,13 +3,12 @@ import GridLayout from "../../containers/Layouts/DefaultGridLayout";
 import Head from "next/head";
 
 import { ContainerTable } from "../../styles/pageStyles/clientes/styles";
-import { GetServerSideProps } from "next";
 import { firstLetter } from "../../utils/firstLetter";
 import { sumeMoney } from "../../utils/sumeMoney";
 import { InputPrimary } from "../../components/Inputs/InputPrimary";
 import { TotalMoneyInputStyle } from "../../styles/pageStyles/mounths/styles";
 import { useQuery } from "react-query";
-import { getMounths } from "../../services/mounth";
+import { servicesMonths } from "../../services/mounth";
 import { withSSRAuth } from "../../utils/authAndPermissions/withSSRAuth";
 
 interface IMounthsProps {
@@ -18,7 +17,7 @@ interface IMounthsProps {
 }
 
 async function loadMounths() {
-  const data = await getMounths({})
+  const data = await servicesMonths.GetAllUserMonths({})
   const mounths = data?.map(mounth => {
     return {
       _id: mounth._id,
@@ -72,8 +71,8 @@ export default function Mounths({ resMounths, totalMoneyMounth }: IMounthsProps)
 }
 
 export const getServerSideProps = withSSRAuth(
-  async (ctx) => {
-    const data = await getMounths({ctx});
+  async (context) => {
+    const data = await servicesMonths.GetAllUserMonths({context});
 
     if (!data) {
       return {

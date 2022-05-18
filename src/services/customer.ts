@@ -23,7 +23,7 @@ interface ICreateCustomer {
   responsibleName: string;
   email: string;
   phone: string;
-  value: string;
+  contractValue: string;
   dueDate: string;
   paymentMethod: string;
   serviceStart: string;
@@ -34,12 +34,12 @@ export async function createCustomer({
   responsibleName,
   email,
   phone,
-  value,
+  contractValue,
   dueDate,
   paymentMethod,
   serviceStart,
 }: ICreateCustomer) {
-  const data = { name, responsibleName, email, phone, value, dueDate, paymentMethod, serviceStart };
+  const data = { name, responsibleName, email, phone, value: contractValue, dueDate, paymentMethod, serviceStart };
   try {
     const response = await api.post(CREATE_CUSTOMER, data);
     return response.data

@@ -45,13 +45,14 @@ export default function Home() {
     try {
       await signIn(data);
       Router.push('/dashboard');
+      setTimeout(() => {
+        setLoading(false)
+      }, 4000)
     } catch (err) {
-      if (err) toast.error(err);
+      if (err) toast.error('Email ou senha incorreta!');
       if (!err) toast.error('Internal server error');
-    } finally {
       setLoading(false)
-    }
-    setLoading(false)
+    } 
   }
 
   return (
